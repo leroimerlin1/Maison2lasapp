@@ -8,67 +8,118 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Press+Start+2P&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     :root { --neon-green: #39ff14; }
-    body, html {
-      margin: 0; padding: 0; height: 100vh; overflow: hidden;
-      background: #000000; color: white;
-      font-family: 'Inter', system-ui, sans-serif;
-    }
-    .neon-text { text-shadow: 0 0 20px var(--neon-green), 0 0 40px var(--neon-green); }
-    .product-card { transition: all 0.3s ease; }
-    .product-card:hover { transform: translateY(-8px); box-shadow: 0 0 30px rgba(57,255,20,0.3); }
-    .support-btn { transition: all 0.3s ease; }
-    .support-btn:hover { transform: translateY(-4px); box-shadow: 0 0 25px rgba(57,255,20,0.4); }
-    .info-section { background: linear-gradient(145deg,#1a1a1a,#111); border: 1px solid rgba(57,255,20,0.2); }
 
 ```
+*, *::before, *::after { box-sizing: border-box; }
+
+body, html {
+  margin: 0; padding: 0; height: 100%; overflow: hidden;
+  background: #000; color: white;
+  font-family: 'Inter', system-ui, sans-serif;
+  overscroll-behavior: none;
+}
+
+.neon-text { text-shadow: 0 0 20px var(--neon-green), 0 0 40px var(--neon-green); }
+.product-card { transition: all 0.3s ease; }
+.product-card:active { transform: scale(0.97); }
+.support-btn { transition: all 0.3s ease; }
+.info-section { background: linear-gradient(145deg,#1a1a1a,#111); border: 1px solid rgba(57,255,20,0.2); }
+
+/* PAGE DETAIL - verrouillée, pas de débordement */
+#detail-page {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100vw;
+}
+
+#detail-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
 /* SWIPER */
-.swiper-container { position: relative; overflow: hidden; width: 100%; }
-.swiper-track { display: flex; transition: transform 0.35s ease; }
-.swiper-track img { flex-shrink: 0; width: 100%; height: 320px; object-fit: cover; }
+.swiper-wrap {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #111;
+  touch-action: pan-y;
+}
+.swiper-track {
+  display: flex;
+  transition: transform 0.35s ease;
+  will-change: transform;
+}
+.swiper-track img {
+  flex-shrink: 0;
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
 .swiper-btn {
   position: absolute; top: 50%; transform: translateY(-50%);
-  background: rgba(0,0,0,0.6); border: none; color: white;
-  width: 40px; height: 40px; border-radius: 50%; font-size: 18px;
-  cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.65);
+  border: 1.5px solid rgba(255,255,255,0.2);
+  color: white; width: 46px; height: 46px; border-radius: 50%;
+  font-size: 16px; cursor: pointer; z-index: 10;
+  display: flex; align-items: center; justify-content: center;
+  -webkit-tap-highlight-color: transparent;
 }
-.swiper-btn-prev { left: 10px; }
-.swiper-btn-next { right: 10px; }
-.swiper-dots { display: flex; justify-content: center; gap: 6px; padding: 10px 0; }
-.swiper-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: rgba(255,255,255,0.3); cursor: pointer; transition: background 0.2s;
+.swiper-btn-prev { left: 12px; }
+.swiper-btn-next { right: 12px; }
+.swiper-counter {
+  position: absolute; bottom: 10px; right: 14px;
+  background: rgba(0,0,0,0.6); border-radius: 20px;
+  padding: 3px 10px; font-size: 13px; color: white;
 }
-.swiper-dot.active { background: #39ff14; }
 
 /* SIZE BTN */
 .size-btn {
-  border: 1px solid rgba(255,255,255,0.3);
-  border-radius: 12px; padding: 8px 18px;
-  cursor: pointer; transition: all 0.2s; font-size: 14px; font-weight: 600;
+  border: 1.5px solid rgba(255,255,255,0.25);
+  border-radius: 12px; padding: 10px 22px;
+  cursor: pointer; transition: all 0.2s;
+  font-size: 15px; font-weight: 600;
+  background: transparent; color: white;
+  -webkit-tap-highlight-color: transparent;
 }
-.size-btn.selected { border-color: #39ff14; background: rgba(57,255,20,0.15); color: #39ff14; }
-.size-btn:hover { border-color: #39ff14; }
+.size-btn.selected {
+  border-color: #39ff14;
+  background: rgba(57,255,20,0.12);
+  color: #39ff14;
+}
 ```
 
   </style>
 </head>
-<body class="flex flex-col">
+<body class="flex flex-col" style="height:100vh;">
 
   <!-- HEADER -->
 
-  <header class="bg-black/90 border-b border-white/10 px-4 py-5 flex items-center gap-4 sticky top-0 z-50">
-    <img src="sap.jpg" alt="Maison2lasapp Logo" class="h-11 w-auto flex-shrink-0">
+  <header class="bg-black/90 border-b border-white/10 px-4 py-5 flex items-center gap-4 sticky top-0 z-50 flex-shrink-0">
+    <img src="sap.jpg" alt="Logo" class="h-11 w-auto flex-shrink-0">
     <div class="flex flex-col">
       <span class="text-4xl font-black tracking-widest neon-text text-[#39ff14]">MAISON2</span>
       <span class="text-2xl font-bold -mt-2 tracking-wider">LASAPP</span>
     </div>
   </header>
 
-  <!-- MAIN CONTENT - Produits -->
+  <!-- MAIN PRODUCTS -->
 
-  <main id="main-products" class="flex-1 overflow-auto pb-20">
+  <main id="main-products" class="flex-1 overflow-auto pb-20" style="overscroll-behavior:contain;">
     <div class="px-4 pt-6 max-w-2xl mx-auto">
       <button onclick="showCategorySheet()"
               class="w-full bg-zinc-900 hover:bg-zinc-800 transition rounded-3xl p-6 flex items-center justify-between mb-8">
@@ -91,39 +142,37 @@
 
   <!-- PAGE DÉTAIL PRODUIT -->
 
-  <div id="detail-page" class="hidden fixed inset-0 z-[80] bg-black flex flex-col">
-    <div class="bg-black/90 border-b border-white/10 px-4 py-4 flex items-center gap-4 sticky top-0 z-10">
-      <button onclick="closeDetail()" class="text-white text-2xl"><i class="fa-solid fa-arrow-left"></i></button>
+  <div id="detail-page" class="hidden">
+    <div class="bg-black border-b border-white/10 px-4 py-4 flex items-center gap-4 flex-shrink-0">
+      <button onclick="closeDetail()" class="text-white w-10 h-10 flex items-center justify-center text-2xl">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
       <span id="detail-title-header" class="font-bold text-lg truncate flex-1"></span>
     </div>
-    <div class="flex-1 overflow-auto pb-28">
-      <!-- Swiper -->
-      <div class="swiper-container" id="detail-swiper">
+    <div id="detail-scroll">
+      <div class="swiper-wrap">
         <div class="swiper-track" id="detail-track"></div>
-        <button class="swiper-btn swiper-btn-prev" onclick="swiperPrev()"><i class="fa-solid fa-chevron-left"></i></button>
-        <button class="swiper-btn swiper-btn-next" onclick="swiperNext()"><i class="fa-solid fa-chevron-right"></i></button>
+        <button class="swiper-btn swiper-btn-prev" onclick="swiperPrev()">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button class="swiper-btn swiper-btn-next" onclick="swiperNext()">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+        <div class="swiper-counter" id="swiper-counter">1 / 1</div>
       </div>
-      <div class="swiper-dots" id="detail-dots"></div>
-
-```
-  <div class="px-5 pt-4 pb-6">
-    <h1 id="detail-title" class="text-2xl font-bold leading-tight mb-1"></h1>
-    <p id="detail-price" class="text-[#39ff14] text-3xl font-black mt-2 mb-6"></p>
-
-    <!-- Tailles -->
-    <div id="size-section" class="mb-6">
-      <p class="text-gray-400 text-sm mb-3 font-medium">TAILLE</p>
-      <div id="size-buttons" class="flex gap-3 flex-wrap"></div>
+      <div class="px-5 pt-5 pb-28">
+        <h1 id="detail-title" class="text-2xl font-bold leading-tight"></h1>
+        <p id="detail-price" class="text-[#39ff14] text-3xl font-black mt-3 mb-7"></p>
+        <div id="size-section" class="mb-8">
+          <p class="text-gray-400 text-sm mb-3 font-semibold tracking-wider">TAILLE</p>
+          <div id="size-buttons" class="flex gap-3 flex-wrap"></div>
+        </div>
+        <button onclick="addToCartFromDetail()"
+                class="w-full py-5 bg-[#39ff14] text-black font-bold text-xl rounded-3xl transition">
+          Ajouter au panier
+        </button>
+      </div>
     </div>
-
-    <button onclick="addToCartFromDetail()" id="detail-add-btn"
-            class="w-full py-5 bg-[#39ff14] hover:bg-[#2be50f] text-black font-bold text-xl rounded-3xl transition">
-      Ajouter au panier
-    </button>
-  </div>
-</div>
-```
-
   </div>
 
   <!-- PAGE AVIS -->
@@ -149,10 +198,10 @@
             <p class="text-[#39ff14] text-sm mt-1">Site Officiel • Livraison Mondiale</p>
           </div>
         </div>
-        <div class="prose prose-invert max-w-none text-gray-300 leading-relaxed space-y-6">
+        <div class="text-gray-300 leading-relaxed space-y-6">
           <p class="text-lg">Bonjour à tous et bienvenue sur le site officiel <strong class="text-[#39ff14]">Maison2lasapp</strong> !</p>
           <p>Ici, nous vous proposons une sélection des articles tendance et de qualité.<br>Ce canal a été créé spécialement pour vous permettre de commander facilement et de consulter le stock disponible en temps réel.</p>
-          <div class="bg-black/50 border-l-4 border-[#39ff14] pl-5 py-2 my-6">
+          <div class="bg-black/50 border-l-4 border-[#39ff14] pl-5 py-2">
             <p class="text-[#39ff14] font-semibold">🌍 Envoi dans le monde entier sans frais supplémentaires</p>
           </div>
           <p>Il vous suffit de capturer l'article qui vous plaît et de nous contacter directement par message privé dans l'onglet <strong>Support</strong>.</p>
@@ -164,7 +213,7 @@
           <div>
             <h3 class="text-xl font-bold text-[#39ff14] mb-4 flex items-center gap-2"><i class="fa-solid fa-list-check"></i> Comment commander ?</h3>
             <div class="space-y-4 text-sm">
-              <div class="flex gap-4"><div class="w-8 h-8 flex-shrink-0 bg-[#39ff14]/10 text-[#39ff14] rounded-2xl flex items-center justify-center font-bold">1</div><div>Envoyez un message sur WhatsApp ou Telegram pour recevoir le catalogue complet avec tous les articles disponibles.</div></div>
+              <div class="flex gap-4"><div class="w-8 h-8 flex-shrink-0 bg-[#39ff14]/10 text-[#39ff14] rounded-2xl flex items-center justify-center font-bold">1</div><div>Envoyez un message sur WhatsApp ou Telegram pour recevoir le catalogue complet.</div></div>
               <div class="flex gap-4"><div class="w-8 h-8 flex-shrink-0 bg-[#39ff14]/10 text-[#39ff14] rounded-2xl flex items-center justify-center font-bold">2</div><div>Contactez-moi avec les articles que vous souhaitez.</div></div>
               <div class="flex gap-4"><div class="w-8 h-8 flex-shrink-0 bg-[#39ff14]/10 text-[#39ff14] rounded-2xl flex items-center justify-center font-bold">3</div><div>Effectuez un virement instantané. Dès réception, j'expédie votre colis.</div></div>
               <div class="flex gap-4"><div class="w-8 h-8 flex-shrink-0 bg-[#39ff14]/10 text-[#39ff14] rounded-2xl flex items-center justify-center font-bold">4</div><div>Une fois le colis expédié, je vous envoie le numéro de suivi (DHL 7-14 jours).</div></div>
@@ -183,7 +232,7 @@
       <a href="#" onclick="showHome()" class="text-[#39ff14]"><i class="fa-solid fa-house text-3xl"></i></a>
       <a href="#" onclick="showReviews()" class="text-gray-400"><i class="fa-solid fa-star text-3xl"></i></a>
       <a onclick="showCart()" class="relative -mt-10">
-        <div id="cart-button" class="bg-[#39ff14] hover:bg-[#2be50f] transition text-black w-20 h-20 rounded-3xl flex items-center justify-center shadow-2xl shadow-[#39ff14]/50 relative">
+        <div class="bg-[#39ff14] text-black w-20 h-20 rounded-3xl flex items-center justify-center shadow-2xl shadow-[#39ff14]/50 relative">
           <i class="fa-solid fa-cart-shopping text-4xl"></i>
           <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">0</span>
         </div>
@@ -218,7 +267,7 @@
           <i class="fa-solid fa-arrow-right text-2xl"></i>
         </a>
       </div>
-      <button onclick="closeContactModal()" class="w-full mt-8 py-5 bg-zinc-800 hover:bg-zinc-700 transition rounded-3xl text-gray-400 font-medium">Fermer</button>
+      <button onclick="closeContactModal()" class="w-full mt-8 py-5 bg-zinc-800 rounded-3xl text-gray-400 font-medium">Fermer</button>
     </div>
   </div>
 
@@ -226,17 +275,17 @@
 
   <div id="cart-modal" class="hidden fixed inset-0 z-[100] bg-black/95 flex items-end">
     <div class="bg-zinc-900 w-full rounded-t-3xl max-h-[85vh] flex flex-col">
-      <div class="p-5 border-b border-white/10 flex justify-between items-center">
+      <div class="p-5 border-b border-white/10 flex justify-between items-center flex-shrink-0">
         <h2 class="text-2xl font-bold">Votre Panier</h2>
-        <button onclick="closeCart()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-3xl"></i></button>
+        <button onclick="closeCart()"><i class="fa-solid fa-xmark text-3xl text-gray-400"></i></button>
       </div>
       <div id="cart-items" class="flex-1 p-4 overflow-auto space-y-4"></div>
-      <div class="p-5 border-t border-white/10">
+      <div class="p-5 border-t border-white/10 flex-shrink-0">
         <div class="flex justify-between text-xl mb-6">
           <span class="font-medium">Total</span>
           <span id="cart-total" class="font-bold text-[#39ff14]">0 €</span>
         </div>
-        <button onclick="proceedToCheckout()" class="w-full py-6 bg-[#39ff14] hover:bg-[#2be50f] text-black font-bold text-xl rounded-3xl transition">Continuer vers le paiement</button>
+        <button onclick="proceedToCheckout()" class="w-full py-6 bg-[#39ff14] text-black font-bold text-xl rounded-3xl">Continuer vers le paiement</button>
       </div>
     </div>
   </div>
@@ -245,9 +294,9 @@
 
   <div id="checkout-modal" class="hidden fixed inset-0 z-[110] bg-black/95 flex items-end">
     <div class="bg-zinc-900 w-full rounded-t-3xl max-h-[90vh] flex flex-col">
-      <div class="p-5 border-b border-white/10 flex justify-between items-center">
+      <div class="p-5 border-b border-white/10 flex justify-between items-center flex-shrink-0">
         <h2 class="text-2xl font-bold">Finaliser la commande</h2>
-        <button onclick="closeCheckout()" class="text-gray-400 hover:text-white text-3xl">×</button>
+        <button onclick="closeCheckout()" class="text-gray-400 text-3xl">×</button>
       </div>
       <div class="flex-1 overflow-auto p-5 space-y-8">
         <div>
@@ -294,9 +343,9 @@
           </div>
         </div>
       </div>
-      <div class="p-5 border-t border-white/10">
+      <div class="p-5 border-t border-white/10 flex-shrink-0">
         <button id="validate-btn" onclick="sendOrderToWhatsApp()"
-                class="w-full py-6 bg-[#39ff14] text-black font-bold text-xl rounded-3xl transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                class="w-full py-6 bg-[#39ff14] text-black font-bold text-xl rounded-3xl disabled:opacity-50 disabled:cursor-not-allowed" disabled>
           Envoyer la commande sur WhatsApp
         </button>
         <button onclick="closeCheckout()" class="w-full py-5 mt-3 text-gray-400">Annuler</button>
@@ -310,17 +359,17 @@
     <div class="bg-zinc-900 w-full max-w-md rounded-3xl p-8">
       <h2 class="text-2xl font-bold text-center mb-6">Donnez votre avis sur votre commande</h2>
       <div class="flex justify-center gap-2 mb-6" id="star-rating">
-        <i onclick="setRating(1)" class="fa-solid fa-star text-4xl cursor-pointer text-gray-600 hover:text-yellow-400"></i>
-        <i onclick="setRating(2)" class="fa-solid fa-star text-4xl cursor-pointer text-gray-600 hover:text-yellow-400"></i>
-        <i onclick="setRating(3)" class="fa-solid fa-star text-4xl cursor-pointer text-gray-600 hover:text-yellow-400"></i>
-        <i onclick="setRating(4)" class="fa-solid fa-star text-4xl cursor-pointer text-gray-600 hover:text-yellow-400"></i>
-        <i onclick="setRating(5)" class="fa-solid fa-star text-4xl cursor-pointer text-gray-600 hover:text-yellow-400"></i>
+        <i onclick="setRating(1)" class="fa-solid fa-star text-4xl cursor-pointer text-gray-600"></i>
+        <i onclick="setRating(2)" class="fa-solid fa-star text-4xl cursor-pointer text-gray-600"></i>
+        <i onclick="setRating(3)" class="fa-solid fa-star text-4xl cursor-pointer text-gray-600"></i>
+        <i onclick="setRating(4)" class="fa-solid fa-star text-4xl cursor-pointer text-gray-600"></i>
+        <i onclick="setRating(5)" class="fa-solid fa-star text-4xl cursor-pointer text-gray-600"></i>
       </div>
       <textarea id="review-comment" rows="4"
                 class="w-full bg-zinc-800 border border-white/20 rounded-2xl px-5 py-4 focus:outline-none focus:border-[#39ff14] text-white"
                 placeholder="Que pensez-vous de votre commande ? (optionnel)"></textarea>
       <div class="flex gap-3 mt-8">
-        <button onclick="skipReview()" class="flex-1 py-5 bg-zinc-800 hover:bg-zinc-700 rounded-3xl text-gray-400">Plus tard</button>
+        <button onclick="skipReview()" class="flex-1 py-5 bg-zinc-800 rounded-3xl text-gray-400">Plus tard</button>
         <button onclick="submitReview()" class="flex-1 py-5 bg-[#39ff14] text-black font-bold rounded-3xl">Publier l'avis</button>
       </div>
     </div>
@@ -330,13 +379,13 @@
 
   <div id="category-sheet" class="hidden fixed inset-0 z-[100] bg-black/95 flex items-end">
     <div class="bg-zinc-900 w-full rounded-t-3xl max-h-[80vh] flex flex-col">
-      <div class="p-5 border-b border-white/10">
+      <div class="p-5 border-b border-white/10 flex-shrink-0">
         <div class="w-12 h-1.5 bg-white/30 mx-auto rounded-full mb-4"></div>
         <h2 class="text-center text-2xl font-bold">Catégories</h2>
       </div>
       <div id="category-list" class="flex-1 p-4 overflow-auto space-y-2"></div>
-      <div class="p-4 border-t border-white/10 flex gap-3">
-        <button onclick="closeSheets()" class="flex-1 py-6 bg-zinc-800 hover:bg-zinc-700 rounded-3xl">Fermer</button>
+      <div class="p-4 border-t border-white/10 flex gap-3 flex-shrink-0">
+        <button onclick="closeSheets()" class="flex-1 py-6 bg-zinc-800 rounded-3xl">Fermer</button>
         <button onclick="applyFilters()" class="flex-1 py-6 bg-[#39ff14] text-black font-bold rounded-3xl">Appliquer</button>
       </div>
     </div>
@@ -353,114 +402,32 @@
 
     const categoriesList = ["Tous","SACS LUXE","RUNNING","T-SHIRT","CLAQUETTES","ENSEMBLE","LUXE","CHAUSSURE LUXE","VESTE","CP/STONE","CASQUETTE/BONNET","PULL","CHAUSSURE SPORT","LUNETTES","BIJOUX","LORO PIANA","PORTEFEUILLE","MAILLOT FOOT","ALO","SHORT","ELECTRONIQUE","MONTRE","PARFUMS","CROCS","JEANS","CHEMISE","DOUDOUNE","SOUS-VÊTEMENTS","CASQUE ARAI"];
 
-    // ─── PRODUITS ────────────────────────────────────────────────────────────────
-    // Convention d'images : dossier "images/" + préfixe + _1.jpg, _2.jpg ...
-    // ex : images/burberry-tshirt_1.jpg ... images/burberry-tshirt_7.jpg
-    // Adaptez le préfixe selon vos fichiers réels.
-
     const products = [
-      {
-        id: 1,
-        name: "Short T-shirt Burberry",
-        category: "T-SHIRT",
-        price: 140,
-        hasSizes: true,
-        imagePrefix: "images/burberry-tshirt",
-        imageCount: 7
-      },
-      {
-        id: 2,
-        name: "Short T-shirt Fendi",
-        category: "T-SHIRT",
-        price: 140,
-        hasSizes: true,
-        imagePrefix: "images/fendi-tshirt",
-        imageCount: 8
-      },
-      {
-        id: 3,
-        name: "Short T-shirt Dior",
-        category: "T-SHIRT",
-        price: 140,
-        hasSizes: true,
-        imagePrefix: "images/dior-tshirt1",
-        imageCount: 7
-      },
-      {
-        id: 4,
-        name: "Short T-shirt Dior",
-        category: "T-SHIRT",
-        price: 140,
-        hasSizes: true,
-        imagePrefix: "images/dior-tshirt2",
-        imageCount: 5
-      },
-      {
-        id: 5,
-        name: "Veste Dior Printemps 2026",
-        category: "VESTE",
-        price: 180,
-        hasSizes: true,
-        imagePrefix: "images/dior-veste",
-        imageCount: 4
-      },
-      {
-        id: 6,
-        name: "Baskets Dior B22",
-        category: "CHAUSSURE LUXE",
-        price: 200,
-        hasSizes: false,
-        imagePrefix: "images/dior-b22",
-        imageCount: 4
-      },
-      {
-        id: 7,
-        name: "Baskets Dior B30",
-        category: "CHAUSSURE LUXE",
-        price: 210,
-        hasSizes: false,
-        imagePrefix: "images/dior-b30",
-        imageCount: 4
-      },
-      {
-        id: 8,
-        name: "T-shirt Louis Vuitton",
-        category: "T-SHIRT",
-        price: 70,
-        hasSizes: true,
-        imagePrefix: "images/lv-tshirt",
-        imageCount: 4
-      },
-      {
-        id: 9,
-        name: "Sacoche Dior",
-        category: "SACS LUXE",
-        price: 200,
-        hasSizes: false,
-        imagePrefix: "images/dior-sacoche1",
-        imageCount: 4
-      },
-      {
-        id: 10,
-        name: "Sacoche Dior",
-        category: "SACS LUXE",
-        price: 200,
-        hasSizes: false,
-        imagePrefix: "images/dior-sacoche2",
-        imageCount: 7
-      }
+      { id:1, name:"Short T-shirt Burberry", category:"T-SHIRT", price:140, hasSizes:true,
+        images:["burberry_tshirt_front.JPG","burberry_tshirt_back.JPG","burberry_tshirt_detail.JPG","burberry_tshirt_logo.JPG","burberry_tshirt_worn.JPG","burberry_tshirt_side.JPG","burberry_tshirt_packshot.JPG"] },
+      { id:2, name:"Short T-shirt Fendi", category:"T-SHIRT", price:140, hasSizes:true,
+        images:["fendi_tshirt_front.JPG","fendi_tshirt_back.JPG","fendi_tshirt_detail.JPG","fendi_tshirt_logo.JPG","fendi_tshirt_worn.JPG","fendi_tshirt_side.JPG","fendi_tshirt_close.JPG","fendi_tshirt_packshot.JPG"] },
+      { id:3, name:"Short T-shirt Dior", category:"T-SHIRT", price:140, hasSizes:true,
+        images:["dior_tshirt1_front.JPG","dior_tshirt1_back.JPG","dior_tshirt1_detail.JPG","dior_tshirt1_logo.JPG","dior_tshirt1_worn.JPG","dior_tshirt1_side.JPG","dior_tshirt1_packshot.JPG"] },
+      { id:4, name:"Short T-shirt Dior", category:"T-SHIRT", price:140, hasSizes:true,
+        images:["dior_tshirt2_front.JPG","dior_tshirt2_back.JPG","dior_tshirt2_detail.JPG","dior_tshirt2_logo.JPG","dior_tshirt2_packshot.JPG"] },
+      { id:5, name:"Veste Dior Printemps 2026", category:"VESTE", price:180, hasSizes:true,
+        images:["dior_veste_front.JPG","dior_veste_back.JPG","dior_veste_detail.JPG","dior_veste_worn.JPG"] },
+      { id:6, name:"Baskets Dior B22", category:"CHAUSSURE LUXE", price:200, hasSizes:false,
+        images:["dior_b22_side.JPG","dior_b22_front.JPG","dior_b22_sole.JPG","dior_b22_detail.JPG"] },
+      { id:7, name:"Baskets Dior B30", category:"CHAUSSURE LUXE", price:210, hasSizes:false,
+        images:["dior_b30_side.JPG","dior_b30_front.JPG","dior_b30_sole.JPG","dior_b30_detail.JPG"] },
+      { id:8, name:"T-shirt Louis Vuitton", category:"T-SHIRT", price:70, hasSizes:true,
+        images:["lv_tshirt_front.JPG","lv_tshirt_back.JPG","lv_tshirt_detail.JPG","lv_tshirt_worn.JPG"] },
+      { id:9, name:"Sacoche Dior", category:"SACS LUXE", price:200, hasSizes:false,
+        images:["dior_sacoche1_front.JPG","dior_sacoche1_back.JPG","dior_sacoche1_inside.JPG","dior_sacoche1_detail.JPG"] },
+      { id:10, name:"Sacoche Dior", category:"SACS LUXE", price:200, hasSizes:false,
+        images:["dior_sacoche2_front.JPG","dior_sacoche2_back.JPG","dior_sacoche2_inside.JPG","dior_sacoche2_detail.JPG","dior_sacoche2_logo.JPG","dior_sacoche2_worn.JPG","dior_sacoche2_packshot.JPG"] }
     ];
 
-    // Helper : génère la liste des images pour un produit
-    function getImages(product) {
-      const imgs = [];
-      for (let i = 1; i <= product.imageCount; i++) {
-        imgs.push(`${product.imagePrefix}_${i}.jpg`);
-      }
-      return imgs;
-    }
+    const WHATSAPP_NUMBER = "+8618122042569";
 
-    // ─── SWIPER ───────────────────────────────────────────────────────────────────
+    // ── SWIPER ──────────────────────────────────────────────────────────────
     function buildSwiper(images) {
       swiperIndex = 0;
       const track = document.getElementById('detail-track');
@@ -468,53 +435,31 @@
       images.forEach(src => {
         const img = document.createElement('img');
         img.src = src;
-        img.onerror = function(){ this.src='https://picsum.photos/id/1/800/600.jpg'; };
+        img.onerror = () => { img.src = 'https://picsum.photos/id/1/800/600.jpg'; };
         track.appendChild(img);
       });
-      buildDots(images.length);
       updateSwiper();
     }
 
-    function buildDots(count) {
-      const dots = document.getElementById('detail-dots');
-      dots.innerHTML = '';
-      for (let i = 0; i < count; i++) {
-        const d = document.createElement('div');
-        d.className = 'swiper-dot' + (i === 0 ? ' active' : '');
-        d.onclick = () => { swiperIndex = i; updateSwiper(); };
-        dots.appendChild(d);
-      }
-    }
-
     function updateSwiper() {
-      const track = document.getElementById('detail-track');
-      track.style.transform = `translateX(-${swiperIndex * 100}%)`;
-      document.querySelectorAll('.swiper-dot').forEach((d, i) => {
-        d.classList.toggle('active', i === swiperIndex);
-      });
+      const total = currentDetailProduct ? currentDetailProduct.images.length : 1;
+      document.getElementById('detail-track').style.transform = `translateX(-${swiperIndex * 100}%)`;
+      document.getElementById('swiper-counter').textContent = `${swiperIndex + 1} / ${total}`;
     }
 
     function swiperPrev() {
-      const count = currentDetailProduct ? currentDetailProduct.imageCount : 1;
-      swiperIndex = (swiperIndex - 1 + count) % count;
+      const total = currentDetailProduct ? currentDetailProduct.images.length : 1;
+      swiperIndex = (swiperIndex - 1 + total) % total;
       updateSwiper();
     }
 
     function swiperNext() {
-      const count = currentDetailProduct ? currentDetailProduct.imageCount : 1;
-      swiperIndex = (swiperIndex + 1) % count;
+      const total = currentDetailProduct ? currentDetailProduct.images.length : 1;
+      swiperIndex = (swiperIndex + 1) % total;
       updateSwiper();
     }
 
-    // Touch swipe support
-    let touchStartX = 0;
-    document.getElementById('detail-track').addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-    document.getElementById('detail-track').addEventListener('touchend', e => {
-      const dx = e.changedTouches[0].clientX - touchStartX;
-      if (Math.abs(dx) > 40) { dx < 0 ? swiperNext() : swiperPrev(); }
-    }, { passive: true });
-
-    // ─── PAGE DÉTAIL ──────────────────────────────────────────────────────────────
+    // ── PAGE DÉTAIL ─────────────────────────────────────────────────────────
     function openDetail(productId) {
       const product = products.find(p => p.id === productId);
       if (!product) return;
@@ -525,9 +470,8 @@
       document.getElementById('detail-title').textContent = product.name;
       document.getElementById('detail-price').textContent = product.price + ' €';
 
-      buildSwiper(getImages(product));
+      buildSwiper(product.images);
 
-      // Tailles
       const sizeSection = document.getElementById('size-section');
       const sizeButtons = document.getElementById('size-buttons');
       if (product.hasSizes) {
@@ -548,8 +492,11 @@
         sizeSection.classList.add('hidden');
       }
 
-      document.getElementById('detail-page').classList.remove('hidden');
+      document.getElementById('detail-scroll').scrollTop = 0;
       document.getElementById('main-products').classList.add('hidden');
+      document.getElementById('reviews-page').classList.add('hidden');
+      document.getElementById('info-page').classList.add('hidden');
+      document.getElementById('detail-page').classList.remove('hidden');
     }
 
     function closeDetail() {
@@ -559,32 +506,16 @@
 
     function addToCartFromDetail() {
       if (!currentDetailProduct) return;
-      if (currentDetailProduct.hasSizes && !selectedSize) {
-        alert('Veuillez choisir une taille.');
-        return;
-      }
-      const itemName = currentDetailProduct.hasSizes
-        ? `${currentDetailProduct.name} (${selectedSize})`
-        : currentDetailProduct.name;
-      const existing = cart.find(item =>
-        item.id === currentDetailProduct.id && item.size === selectedSize
-      );
-      if (existing) {
-        existing.quantity = (existing.quantity || 1) + 1;
-      } else {
-        cart.push({
-          ...currentDetailProduct,
-          displayName: itemName,
-          size: selectedSize,
-          quantity: 1,
-          img: `${currentDetailProduct.imagePrefix}_1.jpg`
-        });
-      }
+      if (currentDetailProduct.hasSizes && !selectedSize) { alert('Veuillez choisir une taille.'); return; }
+      const displayName = currentDetailProduct.hasSizes ? `${currentDetailProduct.name} (${selectedSize})` : currentDetailProduct.name;
+      const existing = cart.find(item => item.id === currentDetailProduct.id && item.size === selectedSize);
+      if (existing) { existing.quantity = (existing.quantity||1) + 1; }
+      else { cart.push({ ...currentDetailProduct, displayName, size: selectedSize, quantity: 1, img: currentDetailProduct.images[0] }); }
       updateCartCount();
-      alert(`${itemName} a été ajouté au panier !`);
+      alert(`${displayName} a été ajouté au panier !`);
     }
 
-    // ─── PRODUITS GRID ────────────────────────────────────────────────────────────
+    // ── GRILLE PRODUITS ─────────────────────────────────────────────────────
     function renderProducts() {
       const grid = document.getElementById('products-grid');
       grid.innerHTML = '';
@@ -595,14 +526,13 @@
       filtered.forEach(p => {
         const div = document.createElement('div');
         div.className = "product-card bg-zinc-900 rounded-3xl overflow-hidden cursor-pointer";
-        const firstImg = `${p.imagePrefix}_1.jpg`;
         div.innerHTML = `
-          <img src="${firstImg}" class="w-full h-52 object-cover" onerror="this.src='https://picsum.photos/id/1/400/400.jpg'">
+          <img src="${p.images[0]}" class="w-full h-52 object-cover" onerror="this.src='https://picsum.photos/id/1/400/400.jpg'">
           <div class="p-4">
             <p class="font-semibold text-base leading-tight">${p.name}</p>
             <p class="text-[#39ff14] font-bold text-xl mt-1">${p.price} €</p>
             <div class="flex items-center gap-1 mt-1 text-xs text-gray-500">
-              <i class="fa-solid fa-image"></i> ${p.imageCount} photos
+              <i class="fa-solid fa-image"></i> ${p.images.length} photos
             </div>
           </div>
         `;
@@ -611,16 +541,15 @@
       });
     }
 
-    // ─── PANIER ───────────────────────────────────────────────────────────────────
+    // ── PANIER ──────────────────────────────────────────────────────────────
     function updateCartCount() {
-      const count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-      document.getElementById('cart-count').textContent = count;
+      document.getElementById('cart-count').textContent = cart.reduce((s,i) => s+(i.quantity||1), 0);
     }
 
     function showCart() {
       const container = document.getElementById('cart-items');
       container.innerHTML = '';
-      if (cart.length === 0) {
+      if (!cart.length) {
         container.innerHTML = `<p class="text-center text-gray-400 py-10">Votre panier est vide</p>`;
       } else {
         cart.forEach((item, index) => {
@@ -629,12 +558,12 @@
           div.innerHTML = `
             <img src="${item.img}" class="w-20 h-20 object-cover rounded-xl" onerror="this.src='https://picsum.photos/id/1/200/200.jpg'">
             <div class="flex-1">
-              <p class="font-semibold text-sm">${item.displayName || item.name}</p>
-              <p class="text-[#39ff14]">${item.price} € × ${item.quantity || 1}</p>
+              <p class="font-semibold text-sm">${item.displayName||item.name}</p>
+              <p class="text-[#39ff14]">${item.price} € × ${item.quantity||1}</p>
               <div class="flex items-center gap-3 mt-3">
-                <button onclick="changeQuantity(${index}, -1)" class="w-8 h-8 bg-zinc-700 rounded-lg">-</button>
-                <span class="font-mono">${item.quantity || 1}</span>
-                <button onclick="changeQuantity(${index}, 1)" class="w-8 h-8 bg-zinc-700 rounded-lg">+</button>
+                <button onclick="changeQuantity(${index},-1)" class="w-8 h-8 bg-zinc-700 rounded-lg">-</button>
+                <span>${item.quantity||1}</span>
+                <button onclick="changeQuantity(${index},1)" class="w-8 h-8 bg-zinc-700 rounded-lg">+</button>
                 <button onclick="removeFromCart(${index})" class="ml-auto text-red-400"><i class="fa-solid fa-trash"></i></button>
               </div>
             </div>
@@ -642,175 +571,124 @@
           container.appendChild(div);
         });
       }
-      const total = cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
-      document.getElementById('cart-total').textContent = total + " €";
+      document.getElementById('cart-total').textContent = cart.reduce((s,i) => s+i.price*(i.quantity||1), 0) + " €";
       document.getElementById('cart-modal').classList.remove('hidden');
     }
 
-    function changeQuantity(index, delta) {
-      cart[index].quantity = Math.max(1, (cart[index].quantity || 1) + delta);
-      showCart(); updateCartCount();
-    }
-
-    function removeFromCart(index) {
-      cart.splice(index, 1); showCart(); updateCartCount();
-    }
-
+    function changeQuantity(index, delta) { cart[index].quantity = Math.max(1,(cart[index].quantity||1)+delta); showCart(); updateCartCount(); }
+    function removeFromCart(index) { cart.splice(index,1); showCart(); updateCartCount(); }
     function closeCart() { document.getElementById('cart-modal').classList.add('hidden'); }
 
     function proceedToCheckout() {
-      if (cart.length === 0) return;
+      if (!cart.length) return;
       closeCart();
-      const total = cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
-      const ref = "M2L-" + Math.floor(100000 + Math.random() * 900000);
+      const total = cart.reduce((s,i) => s+i.price*(i.quantity||1), 0);
+      const ref = "M2L-" + Math.floor(100000+Math.random()*900000);
       document.getElementById('final-total').textContent = total + " €";
       document.getElementById('order-ref').textContent = ref;
-      const summary = document.getElementById('order-summary');
-      summary.innerHTML = cart.map(item => `
-        <div class="flex justify-between text-sm">
-          <span>${item.displayName || item.name} × ${item.quantity || 1}</span>
-          <span>${item.price * (item.quantity || 1)} €</span>
-        </div>
-      `).join('');
+      document.getElementById('order-summary').innerHTML = cart.map(i =>
+        `<div class="flex justify-between text-sm"><span>${i.displayName||i.name} × ${i.quantity||1}</span><span>${i.price*(i.quantity||1)} €</span></div>`
+      ).join('');
       document.getElementById('confirmTransfer').checked = false;
       updateValidateButton();
       document.getElementById('checkout-modal').classList.remove('hidden');
     }
 
     function updateValidateButton() {
-      const filled = ['firstName','lastName','address','postalCode','city','phone']
-        .every(id => document.getElementById(id).value.trim());
-      const checked = document.getElementById('confirmTransfer').checked;
-      document.getElementById('validate-btn').disabled = !(filled && checked);
+      const filled = ['firstName','lastName','address','postalCode','city','phone'].every(id => document.getElementById(id).value.trim());
+      document.getElementById('validate-btn').disabled = !(filled && document.getElementById('confirmTransfer').checked);
     }
 
     function sendOrderToWhatsApp() {
-      const firstName = document.getElementById('firstName').value.trim();
-      const lastName = document.getElementById('lastName').value.trim();
-      const address = document.getElementById('address').value.trim();
-      const postalCode = document.getElementById('postalCode').value.trim();
-      const city = document.getElementById('city').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const total = document.getElementById('final-total').textContent;
-      const ref = document.getElementById('order-ref').textContent;
-
-      lastOrderProducts = cart.map(item => ({ name: item.displayName || item.name }));
-
-      let message = `🛍️ *Nouvelle Commande - Maison2lasapp*\n\n`;
-      message += `*Client :* ${firstName} ${lastName}\n*Téléphone :* ${phone}\n*Adresse :*\n${address}\n${postalCode} ${city}\n\n*Produits :*\n`;
-      cart.forEach(item => {
-        message += `• ${item.displayName || item.name} × ${item.quantity || 1} = ${item.price * (item.quantity || 1)} €\n`;
-      });
-      message += `\n*Total :* ${total}\n*Référence virement :* ${ref}\n\n✅ J'ai effectué le virement.\nMerci d'envoyer la preuve de virement en pièce jointe.`;
-
-      window.open(`https://wa.me/+8618122042569?text=${encodeURIComponent(message)}`, '_blank');
+      const v = id => document.getElementById(id).value.trim();
+      lastOrderProducts = cart.map(i => ({ name: i.displayName||i.name }));
+      let msg = `🛍️ *Nouvelle Commande - Maison2lasapp*\n\n*Client :* ${v('firstName')} ${v('lastName')}\n*Téléphone :* ${v('phone')}\n*Adresse :*\n${v('address')}\n${v('postalCode')} ${v('city')}\n\n*Produits :*\n`;
+      cart.forEach(i => { msg += `• ${i.displayName||i.name} × ${i.quantity||1} = ${i.price*(i.quantity||1)} €\n`; });
+      msg += `\n*Total :* ${document.getElementById('final-total').textContent}\n*Référence :* ${document.getElementById('order-ref').textContent}\n\n✅ J'ai effectué le virement.`;
+      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
       alert("WhatsApp s'est ouvert !\nEnvoyez le message puis joignez votre preuve.");
       cart = []; updateCartCount(); closeCheckout();
-      setTimeout(() => { document.getElementById('review-modal').classList.remove('hidden'); }, 800);
+      setTimeout(() => document.getElementById('review-modal').classList.remove('hidden'), 800);
     }
 
     function closeCheckout() { document.getElementById('checkout-modal').classList.add('hidden'); }
 
-    // ─── AVIS ─────────────────────────────────────────────────────────────────────
+    // ── AVIS ────────────────────────────────────────────────────────────────
     function getReviews() { return JSON.parse(localStorage.getItem('sapReviews')) || []; }
-    function saveReview(review) {
-      const reviews = getReviews(); reviews.unshift(review);
-      localStorage.setItem('sapReviews', JSON.stringify(reviews));
-    }
+    function saveReview(r) { const rv = getReviews(); rv.unshift(r); localStorage.setItem('sapReviews', JSON.stringify(rv)); }
     function renderReviews() {
-      const container = document.getElementById('reviews-list');
-      container.innerHTML = '';
+      const c = document.getElementById('reviews-list');
       const reviews = getReviews();
-      if (reviews.length === 0) { container.innerHTML = `<p class="text-center text-gray-400 py-10">Aucun avis pour le moment...</p>`; return; }
-      reviews.forEach(r => {
-        const div = document.createElement('div');
-        div.className = "bg-zinc-900 rounded-3xl p-6";
-        div.innerHTML = `
-          <div class="flex justify-between items-start">
-            <div><p class="font-semibold">${r.name || 'Client anonyme'}</p><p class="text-xs text-gray-500">${new Date(r.date).toLocaleDateString('fr-FR')}</p></div>
-            <div class="flex text-yellow-400">${Array(5).fill(0).map((_,i)=>`<i class="fa-solid fa-star ${i<r.rating?'text-yellow-400':'text-gray-600'}"></i>`).join('')}</div>
+      if (!reviews.length) { c.innerHTML = `<p class="text-center text-gray-400 py-10">Aucun avis pour le moment...</p>`; return; }
+      c.innerHTML = reviews.map(r => `
+        <div class="bg-zinc-900 rounded-3xl p-6">
+          <div class="flex justify-between">
+            <div><p class="font-semibold">${r.name||'Client anonyme'}</p><p class="text-xs text-gray-500">${new Date(r.date).toLocaleDateString('fr-FR')}</p></div>
+            <div>${Array(5).fill(0).map((_,i)=>`<i class="fa-solid fa-star ${i<r.rating?'text-yellow-400':'text-gray-600'}"></i>`).join('')}</div>
           </div>
-          ${r.comment ? `<p class="mt-4 text-gray-300">${r.comment}</p>` : ''}
-          ${r.products&&r.products.length ? `<div class="mt-4 text-xs text-gray-400">Produits : ${r.products.map(p=>p.name).join(', ')}</div>` : ''}
-        `;
-        container.appendChild(div);
-      });
+          ${r.comment?`<p class="mt-4 text-gray-300">${r.comment}</p>`:''}
+        </div>`).join('');
     }
-    function setRating(stars) {
-      currentRating = stars;
-      document.querySelectorAll('#star-rating i').forEach((s,i) => {
-        s.classList.toggle('text-yellow-400', i < stars);
-        s.classList.toggle('text-gray-600', i >= stars);
-      });
+    function setRating(s) {
+      currentRating = s;
+      document.querySelectorAll('#star-rating i').forEach((el,i) => { el.classList.toggle('text-yellow-400',i<s); el.classList.toggle('text-gray-600',i>=s); });
     }
     function submitReview() {
-      if (currentRating === 0) { alert("Veuillez donner au moins 1 étoile."); return; }
-      saveReview({ id: Date.now(), rating: currentRating, comment: document.getElementById('review-comment').value.trim(), date: new Date().toISOString(), name: "Client Maison2lasapp", products: lastOrderProducts });
-      alert("✅ Merci pour votre avis !");
-      closeReviewModal();
+      if (!currentRating) { alert("Veuillez donner au moins 1 étoile."); return; }
+      saveReview({ id:Date.now(), rating:currentRating, comment:document.getElementById('review-comment').value.trim(), date:new Date().toISOString(), name:"Client Maison2lasapp", products:lastOrderProducts });
+      alert("✅ Merci pour votre avis !"); closeReviewModal();
       if (!document.getElementById('reviews-page').classList.contains('hidden')) renderReviews();
     }
     function skipReview() { closeReviewModal(); }
     function closeReviewModal() {
-      document.getElementById('review-modal').classList.add('hidden');
-      currentRating = 0;
-      document.getElementById('review-comment').value = '';
-      document.querySelectorAll('#star-rating i').forEach(s => { s.classList.remove('text-yellow-400'); s.classList.add('text-gray-600'); });
+      document.getElementById('review-modal').classList.add('hidden'); currentRating=0;
+      document.getElementById('review-comment').value='';
+      document.querySelectorAll('#star-rating i').forEach(s=>{s.classList.remove('text-yellow-400');s.classList.add('text-gray-600');});
     }
 
-    // ─── CATÉGORIES ───────────────────────────────────────────────────────────────
+    // ── CATÉGORIES ──────────────────────────────────────────────────────────
     function showCategorySheet() {
-      const list = document.getElementById('category-list');
-      list.innerHTML = categoriesList.map(cat => `
-        <div onclick="toggleCategory('${cat}')" class="p-5 rounded-2xl hover:bg-white/10 flex justify-between items-center transition ${selectedCategories.includes(cat) ? 'bg-white/10 border border-[#39ff14]/30' : 'bg-zinc-800'}">
-          <span>${cat}</span>
-          ${selectedCategories.includes(cat) ? '<i class="fa-solid fa-check text-[#39ff14]"></i>' : ''}
-        </div>
-      `).join('');
+      document.getElementById('category-list').innerHTML = categoriesList.map(cat=>`
+        <div onclick="toggleCategory('${cat}')" class="p-5 rounded-2xl flex justify-between items-center transition ${selectedCategories.includes(cat)?'bg-white/10 border border-[#39ff14]/30':'bg-zinc-800'}">
+          <span>${cat}</span>${selectedCategories.includes(cat)?'<i class="fa-solid fa-check text-[#39ff14]"></i>':''}
+        </div>`).join('');
       document.getElementById('category-sheet').classList.remove('hidden');
     }
     function toggleCategory(cat) {
-      if (cat === "Tous") selectedCategories = [];
-      else if (selectedCategories.includes(cat)) selectedCategories = selectedCategories.filter(c => c !== cat);
+      if (cat==="Tous") selectedCategories=[];
+      else if (selectedCategories.includes(cat)) selectedCategories=selectedCategories.filter(c=>c!==cat);
       else selectedCategories.push(cat);
       showCategorySheet();
     }
     function applyFilters() {
-      document.getElementById('selected-cat-text').textContent = selectedCategories.length === 0 ? "Toutes les catégories" : selectedCategories.slice(0,2).join(", ") + (selectedCategories.length > 2 ? " ..." : "");
+      document.getElementById('selected-cat-text').textContent = selectedCategories.length===0?"Toutes les catégories":selectedCategories.slice(0,2).join(", ")+(selectedCategories.length>2?" ...":"");
       closeSheets(); renderProducts();
     }
     function closeSheets() { document.getElementById('category-sheet').classList.add('hidden'); }
 
-    // ─── NAVIGATION ───────────────────────────────────────────────────────────────
+    // ── NAVIGATION ──────────────────────────────────────────────────────────
     function showContactModal() { document.getElementById('contact-modal').classList.remove('hidden'); }
     function closeContactModal() { document.getElementById('contact-modal').classList.add('hidden'); }
 
     function showHome() {
-      document.getElementById('reviews-page').classList.add('hidden');
-      document.getElementById('info-page').classList.add('hidden');
-      document.getElementById('detail-page').classList.add('hidden');
+      ['reviews-page','info-page','detail-page'].forEach(id=>document.getElementById(id).classList.add('hidden'));
       document.getElementById('main-products').classList.remove('hidden');
       renderProducts();
     }
     function showReviews() {
-      document.getElementById('main-products').classList.add('hidden');
-      document.getElementById('info-page').classList.add('hidden');
-      document.getElementById('detail-page').classList.add('hidden');
+      ['main-products','info-page','detail-page'].forEach(id=>document.getElementById(id).classList.add('hidden'));
       document.getElementById('reviews-page').classList.remove('hidden');
       renderReviews();
     }
     function showInfo() {
-      document.getElementById('main-products').classList.add('hidden');
-      document.getElementById('reviews-page').classList.add('hidden');
-      document.getElementById('detail-page').classList.add('hidden');
+      ['main-products','reviews-page','detail-page'].forEach(id=>document.getElementById(id).classList.add('hidden'));
       document.getElementById('info-page').classList.remove('hidden');
     }
 
-    // ─── INIT ─────────────────────────────────────────────────────────────────────
+    // ── INIT ────────────────────────────────────────────────────────────────
     window.onload = () => {
       if (window.Telegram?.WebApp) { window.Telegram.WebApp.expand(); window.Telegram.WebApp.setHeaderColor("#000000"); }
-      renderProducts();
-      updateCartCount();
+      renderProducts(); updateCartCount();
       ['firstName','lastName','address','postalCode','city','phone'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', updateValidateButton);
