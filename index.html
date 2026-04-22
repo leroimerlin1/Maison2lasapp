@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -7,7 +6,6 @@
   <title>Maison2lasapp</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
   <style>
@@ -25,7 +23,6 @@
       background: #000; 
       color: white;
       font-family: 'Inter', system-ui, sans-serif;
-      overscroll-behavior: none;
     }
 
     .neon-text { 
@@ -35,36 +32,19 @@
     .product-card { transition: all 0.3s ease; }
     .product-card:active { transform: scale(0.97); }
 
-    .info-section { 
-      background: linear-gradient(145deg, #1a1a1a, #111); 
-      border: 1px solid rgba(57,255,20,0.2); 
+    /* Page d'accueil - images comme avant */
+    .product-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
     }
 
-    /* DETAIL PAGE */
-    #detail-page {
-      position: fixed;
-      inset: 0;
-      z-index: 80;
-      background: #000;
-      display: none;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    #detail-scroll {
-      flex: 1;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      overscroll-behavior: contain;
-    }
-
-    /* SWIPER */
+    /* Page détail - images non coupées */
     .swiper-wrap {
       position: relative;
       width: 100%;
       overflow: hidden;
       background: #111;
-      touch-action: pan-y;
     }
     .swiper-track {
       display: flex;
@@ -74,8 +54,9 @@
     .swiper-track img {
       flex-shrink: 0;
       width: 100%;
-      height: 320px;
-      object-fit: cover;
+      height: 360px;
+      object-fit: contain;
+      background: #111;
       pointer-events: none;
       user-select: none;
     }
@@ -87,7 +68,6 @@
       color: white; width: 46px; height: 46px; border-radius: 50%;
       font-size: 16px; cursor: pointer; z-index: 10;
       display: flex; align-items: center; justify-content: center;
-      -webkit-tap-highlight-color: transparent;
     }
     .swiper-btn-prev { left: 12px; }
     .swiper-btn-next { right: 12px; }
@@ -104,33 +84,56 @@
       cursor: pointer; transition: all 0.2s;
       font-size: 15px; font-weight: 600;
       background: transparent; color: white;
-      -webkit-tap-highlight-color: transparent;
     }
     .size-btn.selected {
       border-color: #39ff14;
       background: rgba(57,255,20,0.12);
       color: #39ff14;
     }
-  </style>
 
+    /* Filtres compacts pour Telegram Mini App */
+    .compact-select {
+      height: 42px;
+      font-size: 14px;
+      padding: 0 12px;
+    }
+  </style>
 </head>
 <body class="flex flex-col h-screen">
 
   <!-- HEADER -->
-
-  <header class="bg-black/90 border-b border-white/10 px-4 py-5 flex items-center gap-4 sticky top-0 z-50 flex-shrink-0">
-    <img src="sap.jpg" alt="Logo" class="h-11 w-auto flex-shrink-0">
-    <div class="flex flex-col">
-      <span class="text-4xl font-black tracking-widest neon-text text-[#39ff14]">MAISON2</span>
-      <span class="text-2xl font-bold -mt-2 tracking-wider">LASAPP</span>
+  <header class="bg-black/90 border-b border-white/10 px-4 py-4 flex items-center gap-3 sticky top-0 z-50 flex-shrink-0">
+    <img src="sap.jpg" alt="Logo" class="h-9 w-auto flex-shrink-0">
+    <div class="flex flex-col -space-y-1">
+      <span class="text-3xl font-black tracking-widest neon-text text-[#39ff14]">MAISON2</span>
+      <span class="text-xl font-bold tracking-wider">LASAPP</span>
     </div>
   </header>
 
-  <!-- MAIN PRODUCTS -->
+  <!-- FILTRES COMPACTS -->
+  <div class="bg-black/95 border-b border-white/10 px-4 py-3 sticky top-[60px] z-40">
+    <div class="max-w-2xl mx-auto flex gap-2 items-center">
+      <select id="category-filter" onchange="filterProducts()" 
+              class="compact-select flex-1 bg-zinc-900 border border-white/20 rounded-2xl text-white focus:outline-none focus:border-[#39ff14]">
+        <option value="">Toutes catégories</option>
+      </select>
 
+      <select id="brand-filter" onchange="filterProducts()" 
+              class="compact-select flex-1 bg-zinc-900 border border-white/20 rounded-2xl text-white focus:outline-none focus:border-[#39ff14]">
+        <option value="">Toutes marques</option>
+      </select>
+
+      <button onclick="resetFilters()" 
+              class="w-10 h-10 bg-zinc-900 hover:bg-zinc-800 border border-white/20 rounded-2xl flex items-center justify-center text-[#39ff14] flex-shrink-0">
+        <i class="fa-solid fa-rotate-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN PRODUCTS -->
   <main id="main-products" class="flex-1 overflow-auto pb-20">
-    <div class="px-4 pt-6 max-w-2xl mx-auto">
-      <div class="flex justify-between items-baseline mb-6">
+    <div class="px-4 pt-4 max-w-2xl mx-auto">
+      <div class="flex justify-between items-baseline mb-5">
         <h2 class="text-3xl font-bold">Nos Produits</h2>
         <span id="product-count" class="text-[#39ff14] font-medium text-lg"></span>
       </div>
@@ -139,8 +142,7 @@
   </main>
 
   <!-- PAGE DÉTAIL PRODUIT -->
-
-  <div id="detail-page">
+  <div id="detail-page" class="hidden flex-col h-full">
     <div class="bg-black border-b border-white/10 px-4 py-4 flex items-center gap-4 flex-shrink-0">
       <button onclick="closeDetail()" class="text-white w-10 h-10 flex items-center justify-center text-2xl">
         <i class="fa-solid fa-arrow-left"></i>
@@ -148,45 +150,38 @@
       <span id="detail-title-header" class="font-bold text-lg truncate flex-1"></span>
     </div>
 
-```
-<div id="detail-scroll" class="flex-1 overflow-y-auto">
-  <div class="swiper-wrap">
-    <div class="swiper-track" id="detail-track"></div>
-    <button class="swiper-btn swiper-btn-prev" onclick="swiperPrev()">
-      <i class="fa-solid fa-chevron-left"></i>
-    </button>
-    <button class="swiper-btn swiper-btn-next" onclick="swiperNext()">
-      <i class="fa-solid fa-chevron-right"></i>
-    </button>
-    <div class="swiper-counter" id="swiper-counter">1 / 1</div>
-  </div>
+    <div id="detail-scroll" class="flex-1 overflow-y-auto">
+      <div class="swiper-wrap">
+        <div class="swiper-track" id="detail-track"></div>
+        <button class="swiper-btn swiper-btn-prev" onclick="swiperPrev()">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button class="swiper-btn swiper-btn-next" onclick="swiperNext()">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+        <div class="swiper-counter" id="swiper-counter">1 / 1</div>
+      </div>
 
-  <div class="px-5 pt-5 pb-32">
-    <h1 id="detail-title" class="text-2xl font-bold leading-tight"></h1>
-    <p id="detail-price" class="text-[#39ff14] text-3xl font-black mt-3 mb-8"></p>
+      <div class="px-5 pt-5 pb-32">
+        <h1 id="detail-title" class="text-2xl font-bold leading-tight"></h1>
+        <p id="detail-price" class="text-[#39ff14] text-3xl font-black mt-3 mb-8"></p>
 
-    <div id="size-section" class="mb-10">
-      <p class="text-gray-400 text-sm mb-3 font-semibold tracking-wider">TAILLE</p>
-      <div id="size-buttons" class="flex gap-3 flex-wrap"></div>
+        <div id="size-section" class="mb-10">
+          <p class="text-gray-400 text-sm mb-3 font-semibold tracking-wider">TAILLE</p>
+          <div id="size-buttons" class="flex gap-3 flex-wrap"></div>
+        </div>
+      </div>
     </div>
 
-    <div class="h-20"></div>
-  </div>
-</div>
-
-<!-- Bouton fixé en bas -->
-<div class="fixed bottom-0 left-0 right-0 bg-black border-t border-white/10 p-5 z-[90]">
-  <button onclick="addToCartFromDetail()" 
-          class="w-full py-5 bg-[#39ff14] text-black font-bold text-xl rounded-3xl transition active:scale-95">
-    Ajouter au panier
-  </button>
-</div>
-```
-
+    <div class="fixed bottom-0 left-0 right-0 bg-black border-t border-white/10 p-5 z-[90]">
+      <button onclick="addToCartFromDetail()" 
+              class="w-full py-5 bg-[#39ff14] text-black font-bold text-xl rounded-3xl transition active:scale-95">
+        Ajouter au panier
+      </button>
+    </div>
   </div>
 
   <!-- REVIEWS PAGE -->
-
   <div id="reviews-page" class="hidden flex-1 overflow-auto pb-20">
     <div class="px-4 pt-6 max-w-2xl mx-auto">
       <h2 class="text-3xl font-bold mb-8 flex items-center gap-3">
@@ -197,7 +192,6 @@
   </div>
 
   <!-- INFO PAGE -->
-
   <div id="info-page" class="hidden flex-1 overflow-auto pb-20">
     <div class="px-4 pt-6 max-w-2xl mx-auto">
       <div class="info-section rounded-3xl p-8 mb-8">
@@ -236,7 +230,6 @@
   </div>
 
   <!-- BOTTOM NAV -->
-
   <nav class="fixed bottom-0 left-0 right-0 bg-black border-t border-white/10 py-3 z-50">
     <div class="flex justify-around items-center max-w-md mx-auto">
       <a href="#" onclick="showHome()" class="text-[#39ff14]"><i class="fa-solid fa-house text-3xl"></i></a>
@@ -252,8 +245,7 @@
     </div>
   </nav>
 
-  <!-- CONTACT MODAL (Nos Réseaux) -->
-
+  <!-- CONTACT MODAL -->
   <div id="contact-modal" class="hidden fixed inset-0 z-[120] bg-black/95 flex items-center justify-center p-4">
     <div class="bg-zinc-900 w-full max-w-md rounded-3xl p-8">
       <div class="text-center mb-8">
@@ -261,26 +253,22 @@
         <p class="text-gray-400">Retrouvez-nous sur nos réseaux sociaux</p>
       </div>
       <div class="space-y-4">
-        <!-- Snapchat -->
-        <a href="https://www.snapchat.com/add/maison2lasapp1" target="_blank" class="support-btn flex items-center gap-5 bg-gradient-to-r from-yellow-400 to-yellow-500 text-black p-6 rounded-3xl font-semibold text-lg">
+        <a href="https://www.snapchat.com/add/maison2lasapp1" target="_blank" class="flex items-center gap-5 bg-gradient-to-r from-yellow-400 to-yellow-500 text-black p-6 rounded-3xl font-semibold text-lg">
           <i class="fa-brands fa-snapchat text-4xl"></i>
           <div class="flex-1"><div class="text-xl">Snapchat</div><div class="text-sm opacity-80">@maison2lasapp1</div></div>
           <i class="fa-solid fa-arrow-right text-2xl"></i>
         </a>
-        <!-- WhatsApp -->
-        <a href="https://wa.me/33759443832" target="_blank" class="support-btn flex items-center gap-5 bg-gradient-to-r from-green-500 to-emerald-500 text-white p-6 rounded-3xl font-semibold text-lg">
+        <a href="https://wa.me/33759443832" target="_blank" class="flex items-center gap-5 bg-gradient-to-r from-green-500 to-emerald-500 text-white p-6 rounded-3xl font-semibold text-lg">
           <i class="fa-brands fa-whatsapp text-4xl"></i>
           <div class="flex-1"><div class="text-xl">WhatsApp</div><div class="text-sm opacity-80">07 59 44 38 32</div></div>
           <i class="fa-solid fa-arrow-right text-2xl"></i>
         </a>
-        <!-- Instagram -->
-        <a href="https://www.instagram.com/maison2lasapp?igsh=MTJiaWkyNDB5a2ZiaA%3D%3D&utm_source=qr" target="_blank" class="support-btn flex items-center gap-5 text-white p-6 rounded-3xl font-semibold text-lg" style="background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);">
+        <a href="https://www.instagram.com/maison2lasapp?igsh=MTJiaWkyNDB5a2ZiaA%3D%3D&utm_source=qr" target="_blank" class="flex items-center gap-5 text-white p-6 rounded-3xl font-semibold text-lg" style="background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);">
           <i class="fa-brands fa-instagram text-4xl"></i>
           <div class="flex-1"><div class="text-xl">Instagram</div><div class="text-sm opacity-80">@maison2lasapp</div></div>
           <i class="fa-solid fa-arrow-right text-2xl"></i>
         </a>
-        <!-- TikTok -->
-        <a href="https://www.tiktok.com/@maison2lasapp?_r=1&_t=ZN-95kbt7PwSV4" target="_blank" class="support-btn flex items-center gap-5 bg-zinc-800 text-white p-6 rounded-3xl font-semibold text-lg border border-white/10">
+        <a href="https://www.tiktok.com/@maison2lasapp?_r=1&_t=ZN-95kbt7PwSV4" target="_blank" class="flex items-center gap-5 bg-zinc-800 text-white p-6 rounded-3xl font-semibold text-lg border border-white/10">
           <i class="fa-brands fa-tiktok text-4xl"></i>
           <div class="flex-1"><div class="text-xl">TikTok</div><div class="text-sm opacity-80">@maison2lasapp</div></div>
           <i class="fa-solid fa-arrow-right text-2xl"></i>
@@ -291,7 +279,6 @@
   </div>
 
   <!-- PANIER MODAL -->
-
   <div id="cart-modal" class="hidden fixed inset-0 z-[100] bg-black/95 flex items-end">
     <div class="bg-zinc-900 w-full rounded-t-3xl max-h-[85vh] flex flex-col">
       <div class="p-5 border-b border-white/10 flex justify-between items-center flex-shrink-0">
@@ -310,7 +297,6 @@
   </div>
 
   <!-- CHECKOUT MODAL -->
-
   <div id="checkout-modal" class="hidden fixed inset-0 z-[110] bg-black/95 flex items-end">
     <div class="bg-zinc-900 w-full rounded-t-3xl max-h-[90vh] flex flex-col">
       <div class="p-5 border-b border-white/10 flex justify-between items-center flex-shrink-0">
@@ -340,48 +326,39 @@
           <input id="phone" type="tel" placeholder="Téléphone *" class="mt-4 w-full bg-zinc-800 border border-white/20 rounded-2xl px-5 py-4 focus:outline-none focus:border-[#39ff14]">
         </div>
 
-```
-    <!-- PAYPAL SECTION -->
-    <div class="bg-zinc-950 border border-white/10 rounded-3xl p-6">
-      <h3 class="font-semibold text-lg mb-4 flex items-center gap-2">
-        <i class="fa-brands fa-paypal text-[#0070ba] text-2xl"></i> Paiement via PayPal
-      </h3>
-      <div class="space-y-6">
-        <div class="bg-black/70 p-5 rounded-2xl text-sm space-y-3">
-          <p class="text-gray-300">Cliquez sur le bouton ci-dessous pour effectuer votre paiement PayPal :</p>
-          <a id="paypal-link" href="https://www.paypal.me/AntoniAgrume" target="_blank"
-             class="flex items-center justify-center gap-3 w-full py-4 rounded-2xl font-bold text-white text-lg"
-             style="background: linear-gradient(135deg, #003087 0%, #0070ba 50%, #00a0dc 100%);">
-            <i class="fa-brands fa-paypal text-2xl"></i>
-            Payer via PayPal
-          </a>
-          <p class="text-gray-500 text-xs text-center">paypal.me/AntoniAgrume</p>
+        <div class="bg-zinc-950 border border-white/10 rounded-3xl p-6">
+          <h3 class="font-semibold text-lg mb-4 flex items-center gap-2">
+            <i class="fa-brands fa-paypal text-[#0070ba] text-2xl"></i> Paiement via PayPal
+          </h3>
+          <div class="space-y-6">
+            <div class="bg-black/70 p-5 rounded-2xl text-sm space-y-3">
+              <p class="text-gray-300">Cliquez sur le bouton ci-dessous pour effectuer votre paiement PayPal :</p>
+              <a id="paypal-link" href="https://www.paypal.me/AntoniAgrume" target="_blank"
+                 class="flex items-center justify-center gap-3 w-full py-4 rounded-2xl font-bold text-white text-lg"
+                 style="background: linear-gradient(135deg, #003087 0%, #0070ba 50%, #00a0dc 100%);">
+                <i class="fa-brands fa-paypal text-2xl"></i>
+                Payer via PayPal
+              </a>
+              <p class="text-gray-500 text-xs text-center">paypal.me/AntoniAgrume</p>
+            </div>
+            <div class="flex items-start gap-3">
+              <input type="checkbox" id="confirmPaypal" class="mt-1 w-5 h-5 accent-[#39ff14]" onchange="updateValidateButton()">
+              <label for="confirmPaypal" class="text-sm leading-tight cursor-pointer">J'ai effectué le paiement PayPal du montant total indiqué.</label>
+            </div>
+          </div>
         </div>
-        <div class="flex items-start gap-3">
-          <input type="checkbox" id="confirmPaypal" class="mt-1 w-5 h-5 accent-[#39ff14]" onchange="updateValidateButton()">
-          <label for="confirmPaypal" class="text-sm leading-tight cursor-pointer">J'ai effectué le paiement PayPal du montant total indiqué.</label>
-        </div>
-        <div class="bg-blue-500/10 border border-blue-500/30 p-5 rounded-2xl text-sm">
-          <p class="font-medium text-blue-400">Important :</p>
-          <p class="mt-2">Envoyez la capture d'écran de votre paiement PayPal directement sur WhatsApp après ce message.</p>
-        </div>
+      </div>
+      <div class="p-5 border-t border-white/10 flex-shrink-0">
+        <button id="validate-btn" onclick="sendOrderToWhatsApp()" 
+                class="w-full py-6 bg-[#39ff14] text-black font-bold text-xl rounded-3xl disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+          Envoyer la commande sur WhatsApp
+        </button>
+        <button onclick="closeCheckout()" class="w-full py-5 mt-3 text-gray-400">Annuler</button>
       </div>
     </div>
   </div>
-  <div class="p-5 border-t border-white/10 flex-shrink-0">
-    <button id="validate-btn" onclick="sendOrderToWhatsApp()" 
-            class="w-full py-6 bg-[#39ff14] text-black font-bold text-xl rounded-3xl disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-      Envoyer la commande sur WhatsApp
-    </button>
-    <button onclick="closeCheckout()" class="w-full py-5 mt-3 text-gray-400">Annuler</button>
-  </div>
-</div>
-```
-
-  </div>
 
   <!-- REVIEW MODAL -->
-
   <div id="review-modal" class="hidden fixed inset-0 z-[130] bg-black/95 flex items-center justify-center p-4">
     <div class="bg-zinc-900 w-full max-w-md rounded-3xl p-8">
       <h2 class="text-2xl font-bold text-center mb-6">Donnez votre avis sur votre commande</h2>
@@ -414,27 +391,111 @@
     const PAYPAL_LINK = "https://www.paypal.me/AntoniAgrume";
 
     const products = [
-      { id:1, name:"Short T-shirt Burberry", category:"T-SHIRT", price:140, hasSizes:true,
+      { id:1, name:"Short T-shirt Burberry", price:140, hasSizes:true,
         images:["burberry_tshirt_front.JPG","burberry_tshirt_back.JPG","burberry_tshirt_detail.JPG","burberry_tshirt_logo.JPG","burberry_tshirt_worn.JPG","burberry_tshirt_side.JPG","burberry_tshirt_packshot.JPG"] },
-      { id:2, name:"Short T-shirt Fendi", category:"T-SHIRT", price:140, hasSizes:true,
+      { id:2, name:"Short T-shirt Fendi", price:140, hasSizes:true,
         images:["fendi_tshirt_front.JPG","fendi_tshirt_back.JPG","fendi_tshirt_detail.JPG","fendi_tshirt_logo.JPG","fendi_tshirt_worn.JPG","fendi_tshirt_side.JPG","fendi_tshirt_close.JPG","fendi_tshirt_packshot.JPG"] },
-      { id:3, name:"Short T-shirt Dior", category:"T-SHIRT", price:140, hasSizes:true,
+      { id:3, name:"Short T-shirt Dior", price:140, hasSizes:true,
         images:["dior_tshirt1_front.JPG","dior_tshirt1_back.JPG","dior_tshirt1_detail.JPG","dior_tshirt1_logo.JPG","dior_tshirt1_worn.JPG","dior_tshirt1_side.JPG","dior_tshirt1_packshot.JPG"] },
-      { id:4, name:"Short T-shirt Dior", category:"T-SHIRT", price:140, hasSizes:true,
+      { id:4, name:"Short T-shirt Dior", price:140, hasSizes:true,
         images:["dior_tshirt2_front.JPG","dior_tshirt2_back.JPG","dior_tshirt2_detail.JPG","dior_tshirt2_logo.JPG","dior_tshirt2_packshot.JPG"] },
-      { id:5, name:"Veste Dior Printemps 2026", category:"VESTE", price:180, hasSizes:true,
+      { id:5, name:"Veste Dior Printemps 2026", price:180, hasSizes:true,
         images:["dior_veste_front.JPG","dior_veste_back.JPG","dior_veste_detail.JPG","dior_veste_worn.JPG"] },
-      { id:6, name:"Baskets Dior B22", category:"CHAUSSURE LUXE", price:200, hasSizes:false,
+      { id:6, name:"Baskets Dior B22", price:200, hasSizes:false,
         images:["dior_b22_side.JPG","dior_b22_front.JPG","dior_b22_sole.JPG","dior_b22_detail.JPG"] },
-      { id:7, name:"Baskets Dior B30", category:"CHAUSSURE LUXE", price:210, hasSizes:false,
+      { id:7, name:"Baskets Dior B30", price:210, hasSizes:false,
         images:["dior_b30_side.JPG","dior_b30_front.JPG","dior_b30_sole.JPG","dior_b30_detail.JPG"] },
-      { id:8, name:"T-shirt Louis Vuitton", category:"T-SHIRT", price:70, hasSizes:true,
+      { id:8, name:"T-shirt Louis Vuitton", price:70, hasSizes:true,
         images:["lv_tshirt_front.JPG","lv_tshirt_back.JPG","lv_tshirt_detail.JPG","lv_tshirt_worn.JPG"] },
-      { id:9, name:"Sacoche Dior", category:"SACS LUXE", price:200, hasSizes:false,
+      { id:9, name:"Sacoche Dior", price:200, hasSizes:false,
         images:["dior_sacoche1_front.JPG","dior_sacoche1_back.JPG","dior_sacoche1_inside.JPG","dior_sacoche1_detail.JPG"] },
-      { id:10, name:"Sacoche Dior", category:"SACS LUXE", price:200, hasSizes:false,
-        images:["dior_sacoche2_front.JPG","dior_sacoche2_back.JPG","dior_sacoche2_inside.JPG","dior_sacoche2_detail.JPG","dior_sacoche2_logo.JPG","dior_sacoche2_worn.JPG","dior_sacoche2_packshot.JPG"] }
+      { id:10, name:"Sacoche Dior", price:200, hasSizes:false,
+        images:["dior_sacoche2_front.JPG","dior_sacoche2_back.JPG","dior_sacoche2_inside.JPG","dior_sacoche2_logo.JPG","dior_sacoche2_worn.JPG","dior_sacoche2_packshot.JPG"] }
     ];
+
+    function getCategory(product) {
+      const name = product.name.toLowerCase();
+      if (name.includes("short t-shirt")) return "Ensemble de luxe";
+      if (name.includes("sacoche")) return "Sacs de luxe";
+      if (name.includes("baskets")) return "Chaussures de luxe";
+      if (name.includes("t-shirt") && !name.includes("short")) return "T-shirts";
+      if (name.includes("veste")) return "Vestes";
+      return "Autre";
+    }
+
+    function getBrand(product) {
+      const name = product.name;
+      if (name.includes("Burberry")) return "Burberry";
+      if (name.includes("Fendi")) return "Fendi";
+      if (name.includes("Dior")) return "Dior";
+      if (name.includes("Louis Vuitton") || name.includes("LV")) return "Louis Vuitton";
+      return "Autre";
+    }
+
+    function populateFilters() {
+      const categories = [...new Set(products.map(p => getCategory(p)))].sort();
+      const brands = [...new Set(products.map(p => getBrand(p)))].sort();
+
+      const catSelect = document.getElementById('category-filter');
+      const brandSelect = document.getElementById('brand-filter');
+
+      categories.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        catSelect.appendChild(opt);
+      });
+
+      brands.forEach(brand => {
+        const opt = document.createElement('option');
+        opt.value = brand;
+        opt.textContent = brand;
+        brandSelect.appendChild(opt);
+      });
+    }
+
+    function filterProducts() {
+      const catFilter = document.getElementById('category-filter').value;
+      const brandFilter = document.getElementById('brand-filter').value;
+
+      const filtered = products.filter(p => {
+        const catMatch = !catFilter || getCategory(p) === catFilter;
+        const brandMatch = !brandFilter || getBrand(p) === brandFilter;
+        return catMatch && brandMatch;
+      });
+
+      renderProducts(filtered);
+    }
+
+    function resetFilters() {
+      document.getElementById('category-filter').value = '';
+      document.getElementById('brand-filter').value = '';
+      renderProducts(products);
+    }
+
+    function renderProducts(filteredProducts = products) {
+      const grid = document.getElementById('products-grid');
+      grid.innerHTML = '';
+      
+      document.getElementById('product-count').textContent = `${filteredProducts.length} produit${filteredProducts.length > 1 ? 's' : ''}`;
+      
+      filteredProducts.forEach(p => {
+        const div = document.createElement('div');
+        div.className = "product-card bg-zinc-900 rounded-3xl overflow-hidden cursor-pointer";
+        div.innerHTML = `
+          <img src="${p.images[0]}" class="product-img" onerror="this.src='https://picsum.photos/id/1/400/400.jpg'">
+          <div class="p-4">
+            <p class="font-semibold text-base leading-tight">${p.name}</p>
+            <p class="text-[#39ff14] font-bold text-xl mt-1">${p.price} €</p>
+            <div class="flex items-center gap-1 mt-1 text-xs text-gray-500">
+              <i class="fa-solid fa-image"></i> ${p.images.length} photos
+            </div>
+          </div>
+        `;
+        div.onclick = () => openDetail(p.id);
+        grid.appendChild(div);
+      });
+    }
 
     // SWIPER
     function buildSwiper(images) {
@@ -501,15 +562,15 @@
         sizeSection.classList.add('hidden');
       }
 
-      document.getElementById('detail-scroll').scrollTop = 0;
       document.getElementById('main-products').classList.add('hidden');
       document.getElementById('reviews-page').classList.add('hidden');
       document.getElementById('info-page').classList.add('hidden');
-      document.getElementById('detail-page').style.display = 'flex';
+      document.getElementById('detail-page').classList.remove('hidden');
+      document.getElementById('detail-scroll').scrollTop = 0;
     }
 
     function closeDetail() {
-      document.getElementById('detail-page').style.display = 'none';
+      document.getElementById('detail-page').classList.add('hidden');
       document.getElementById('main-products').classList.remove('hidden');
     }
 
@@ -528,31 +589,6 @@
       }
       updateCartCount();
       alert(`${displayName} a été ajouté au panier !`);
-    }
-
-    // PRODUCTS GRID
-    function renderProducts() {
-      const grid = document.getElementById('products-grid');
-      grid.innerHTML = '';
-      
-      document.getElementById('product-count').textContent = `${products.length} produit${products.length > 1 ? 's' : ''}`;
-      
-      products.forEach(p => {
-        const div = document.createElement('div');
-        div.className = "product-card bg-zinc-900 rounded-3xl overflow-hidden cursor-pointer";
-        div.innerHTML = `
-          <img src="${p.images[0]}" class="w-full h-52 object-cover" onerror="this.src='https://picsum.photos/id/1/400/400.jpg'">
-          <div class="p-4">
-            <p class="font-semibold text-base leading-tight">${p.name}</p>
-            <p class="text-[#39ff14] font-bold text-xl mt-1">${p.price} €</p>
-            <div class="flex items-center gap-1 mt-1 text-xs text-gray-500">
-              <i class="fa-solid fa-image"></i> ${p.images.length} photos
-            </div>
-          </div>
-        `;
-        div.onclick = () => openDetail(p.id);
-        grid.appendChild(div);
-      });
     }
 
     // CART FUNCTIONS
@@ -601,14 +637,15 @@
       updateCartCount();
     }
 
-    function closeCart() { document.getElementById('cart-modal').classList.add('hidden'); }
+    function closeCart() { 
+      document.getElementById('cart-modal').classList.add('hidden'); 
+    }
 
     function proceedToCheckout() {
       if (!cart.length) return;
       closeCart();
       const total = cart.reduce((s,i) => s + i.price*(i.quantity||1), 0);
       document.getElementById('final-total').textContent = total + " €";
-      // Update PayPal link with amount
       const paypalLinkEl = document.getElementById('paypal-link');
       paypalLinkEl.href = `${PAYPAL_LINK}/${total}EUR`;
       document.getElementById('order-summary').innerHTML = cart.map(i => 
@@ -639,7 +676,9 @@
       setTimeout(() => document.getElementById('review-modal').classList.remove('hidden'), 800);
     }
 
-    function closeCheckout() { document.getElementById('checkout-modal').classList.add('hidden'); }
+    function closeCheckout() { 
+      document.getElementById('checkout-modal').classList.add('hidden'); 
+    }
 
     // REVIEWS
     function getReviews() { return JSON.parse(localStorage.getItem('sapReviews')) || []; }
@@ -689,11 +728,8 @@
     }
 
     // NAVIGATION
-    function showContactModal() { document.getElementById('contact-modal').classList.remove('hidden'); }
-    function closeContactModal() { document.getElementById('contact-modal').classList.add('hidden'); }
-
     function showHome() {
-      document.getElementById('detail-page').style.display = 'none';
+      document.getElementById('detail-page').classList.add('hidden');
       document.getElementById('reviews-page').classList.add('hidden');
       document.getElementById('info-page').classList.add('hidden');
       document.getElementById('main-products').classList.remove('hidden');
@@ -701,7 +737,7 @@
     }
 
     function showReviews() {
-      document.getElementById('detail-page').style.display = 'none';
+      document.getElementById('detail-page').classList.add('hidden');
       document.getElementById('main-products').classList.add('hidden');
       document.getElementById('info-page').classList.add('hidden');
       document.getElementById('reviews-page').classList.remove('hidden');
@@ -709,10 +745,18 @@
     }
 
     function showInfo() {
-      document.getElementById('detail-page').style.display = 'none';
+      document.getElementById('detail-page').classList.add('hidden');
       document.getElementById('main-products').classList.add('hidden');
       document.getElementById('reviews-page').classList.add('hidden');
       document.getElementById('info-page').classList.remove('hidden');
+    }
+
+    function showContactModal() { 
+      document.getElementById('contact-modal').classList.remove('hidden'); 
+    }
+
+    function closeContactModal() { 
+      document.getElementById('contact-modal').classList.add('hidden'); 
     }
 
     // INIT
@@ -722,11 +766,7 @@
         window.Telegram.WebApp.setHeaderColor("#000000");
       }
 
-      document.getElementById('detail-page').style.display = 'none';
-      document.getElementById('main-products').classList.remove('hidden');
-      document.getElementById('reviews-page').classList.add('hidden');
-      document.getElementById('info-page').classList.add('hidden');
-
+      populateFilters();
       renderProducts();
       updateCartCount();
 
@@ -736,6 +776,5 @@
       });
     };
   </script>
-
 </body>
 </html>
