@@ -131,7 +131,7 @@
         <option value="">Toutes catégories</option>
       </select>
 
-
+```
   <select id="brand-filter" onchange="filterProducts()" 
           class="compact-select flex-1 bg-zinc-900 border border-white/20 rounded-2xl text-white focus:outline-none focus:border-[#39ff14]">
     <option value="">Toutes marques</option>
@@ -142,7 +142,7 @@
     <i class="fa-solid fa-rotate-right"></i>
   </button>
 </div>
-
+```
 
   </div>
 
@@ -168,7 +168,7 @@
       <span id="detail-title-header" class="font-bold text-lg truncate flex-1"></span>
     </div>
 
-
+```
 <div id="detail-scroll" class="flex-1 overflow-y-auto">
   <div class="swiper-wrap">
     <div class="swiper-track" id="detail-track"></div>
@@ -181,9 +181,10 @@
     <div class="swiper-counter" id="swiper-counter">1 / 1</div>
   </div>
 
-  <div class="px-5 pt-5 pb-32">
+  <div class="px-5 pt-5 pb-48">
     <h1 id="detail-title" class="text-2xl font-bold leading-tight"></h1>
-    <p id="detail-price" class="text-[#39ff14] text-3xl font-black mt-3 mb-8"></p>
+    <p id="detail-price" class="text-[#39ff14] text-3xl font-black mt-3 mb-4"></p>
+    <p id="detail-description" class="text-gray-300 text-sm leading-relaxed mb-8 bg-zinc-900 rounded-2xl px-4 py-3 border border-white/10"></p>
 
     <div id="size-section" class="mb-10">
       <p class="text-gray-400 text-sm mb-3 font-semibold tracking-wider">TAILLE</p>
@@ -198,7 +199,7 @@
     Ajouter au panier
   </button>
 </div>
-
+```
 
   </div>
 
@@ -353,7 +354,7 @@
           <input id="phone" type="tel" placeholder="Téléphone *" class="mt-4 w-full bg-zinc-800 border border-white/20 rounded-2xl px-5 py-4 focus:outline-none focus:border-[#39ff14]">
         </div>
 
-
+```
     <div class="bg-zinc-950 border border-white/10 rounded-3xl p-6">
       <h3 class="font-semibold text-lg mb-4 flex items-center gap-2">
         <i class="fa-brands fa-paypal text-[#0070ba] text-2xl"></i> Paiement via PayPal
@@ -384,7 +385,7 @@
     <button onclick="closeCheckout()" class="w-full py-5 mt-3 text-gray-400">Annuler</button>
   </div>
 </div>
-
+```
 
   </div>
 
@@ -421,26 +422,28 @@
     const WHATSAPP_NUMBER = "+33759443832";
     const PAYPAL_LINK = "https://www.paypal.me/AntoniAgrume";
 
+    const PRODUCT_DESC = "Produit de haute qualité⭐️, accompagné de sa boîte d'origine, de son dustbag et de sa facture.";
+
     const products = [
-      { id:1, name:"Short T-shirt Burberry", price:140, hasSizes:true,
+      { id:1, name:"Short T-shirt Burberry", price:140, hasSizes:true, description:PRODUCT_DESC,
         images:["burberry_tshirt_front.JPG","burberry_tshirt_back.JPG","burberry_tshirt_detail.JPG","burberry_tshirt_logo.JPG","burberry_tshirt_worn.JPG","burberry_tshirt_side.JPG","burberry_tshirt_packshot.JPG"] },
-      { id:2, name:"Short T-shirt Fendi", price:140, hasSizes:true,
+      { id:2, name:"Short T-shirt Fendi", price:140, hasSizes:true, description:PRODUCT_DESC,
         images:["fendi_tshirt_front.JPG","fendi_tshirt_back.JPG","fendi_tshirt_detail.JPG","fendi_tshirt_logo.JPG","fendi_tshirt_worn.JPG","fendi_tshirt_side.JPG","fendi_tshirt_close.JPG","fendi_tshirt_packshot.JPG"] },
-      { id:3, name:"Short T-shirt Dior", price:140, hasSizes:true,
+      { id:3, name:"Short T-shirt Dior", price:140, hasSizes:true, description:PRODUCT_DESC,
         images:["dior_tshirt1_front.JPG","dior_tshirt1_back.JPG","dior_tshirt1_detail.JPG","dior_tshirt1_logo.JPG","dior_tshirt1_worn.JPG","dior_tshirt1_side.JPG","dior_tshirt1_packshot.JPG"] },
-      { id:4, name:"Short T-shirt Dior", price:140, hasSizes:true,
+      { id:4, name:"Short T-shirt Dior", price:140, hasSizes:true, description:PRODUCT_DESC,
         images:["dior_tshirt2_front.JPG","dior_tshirt2_back.JPG","dior_tshirt2_detail.JPG","dior_tshirt2_logo.JPG","dior_tshirt2_packshot.JPG"] },
-      { id:5, name:"Veste Dior Printemps 2026", price:180, hasSizes:true,
+      { id:5, name:"Veste Dior Printemps 2026", price:180, hasSizes:true, description:PRODUCT_DESC,
         images:["dior_veste_front.JPG","dior_veste_back.JPG","dior_veste_detail.JPG","dior_veste_worn.JPG"] },
-      { id:6, name:"Baskets Dior B22", price:200, hasSizes:false,
+      { id:6, name:"Baskets Dior B22", price:200, hasSizes:false, description:PRODUCT_DESC,
         images:["dior_b22_side.JPG","dior_b22_front.JPG","dior_b22_sole.JPG","dior_b22_detail.JPG"] },
-      { id:7, name:"Baskets Dior B30", price:210, hasSizes:false,
+      { id:7, name:"Baskets Dior B30", price:210, hasSizes:false, description:PRODUCT_DESC,
         images:["dior_b30_side.JPG","dior_b30_front.JPG","dior_b30_sole.JPG","dior_b30_detail.JPG"] },
-      { id:8, name:"T-shirt Louis Vuitton", price:70, hasSizes:true,
+      { id:8, name:"T-shirt Louis Vuitton", price:70, hasSizes:true, description:PRODUCT_DESC,
         images:["lv_tshirt_front.JPG","lv_tshirt_back.JPG","lv_tshirt_detail.JPG","lv_tshirt_worn.JPG"] },
-      { id:9, name:"Sacoche Dior", price:200, hasSizes:false,
+      { id:9, name:"Sacoche Dior", price:200, hasSizes:false, description:PRODUCT_DESC,
         images:["dior_sacoche1_front.JPG","dior_sacoche1_back.JPG","dior_sacoche1_inside.JPG","dior_sacoche1_detail.JPG"] },
-      { id:10, name:"Sacoche Dior", price:200, hasSizes:false,
+      { id:10, name:"Sacoche Dior", price:200, hasSizes:false, description:PRODUCT_DESC,
         images:["dior_sacoche2_front.JPG","dior_sacoche2_back.JPG","dior_sacoche2_inside.JPG","dior_sacoche2_logo.JPG","dior_sacoche2_worn.JPG","dior_sacoche2_packshot.JPG"] }
     ];
 
@@ -578,6 +581,7 @@
       document.getElementById('detail-title-header').textContent = product.name;
       document.getElementById('detail-title').textContent = product.name;
       document.getElementById('detail-price').textContent = product.price + ' €';
+      document.getElementById('detail-description').textContent = product.description || '';
 
       buildSwiper(product.images);
 
