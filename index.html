@@ -131,18 +131,17 @@
         <option value="">Toutes catégories</option>
       </select>
 
+<select id="brand-filter" onchange="filterProducts()" 
+class="compact-select flex-1 bg-zinc-900 border border-white/20 rounded-2xl text-white focus:outline-none focus:border-[#39ff14]">
+<option value="">Toutes marques</option>
+</select>
 
-  <select id="brand-filter" onchange="filterProducts()" 
-          class="compact-select flex-1 bg-zinc-900 border border-white/20 rounded-2xl text-white focus:outline-none focus:border-[#39ff14]">
-    <option value="">Toutes marques</option>
-  </select>
+<button onclick="resetFilters()" 
+class="w-10 h-10 bg-zinc-900 hover:bg-zinc-800 border border-white/20 rounded-2xl flex items-center justify-center text-[#39ff14] flex-shrink-0">
+<i class="fa-solid fa-rotate-right"></i>
+</button>
 
-  <button onclick="resetFilters()" 
-          class="w-10 h-10 bg-zinc-900 hover:bg-zinc-800 border border-white/20 rounded-2xl flex items-center justify-center text-[#39ff14] flex-shrink-0">
-    <i class="fa-solid fa-rotate-right"></i>
-  </button>
 </div>
-
 
   </div>
 
@@ -168,7 +167,6 @@
       <span id="detail-title-header" class="font-bold text-lg truncate flex-1"></span>
     </div>
 
-
 <div id="detail-scroll" class="flex-1 overflow-y-auto">
   <div class="swiper-wrap">
     <div class="swiper-track" id="detail-track"></div>
@@ -186,10 +184,13 @@
     <p id="detail-price" class="text-[#39ff14] text-3xl font-black mt-3 mb-4"></p>
     <p id="detail-description" class="text-gray-300 text-sm leading-relaxed mb-8 bg-zinc-900 rounded-2xl px-4 py-3 border border-white/10"></p>
 
-    <div id="size-section" class="mb-10">
-      <p class="text-gray-400 text-sm mb-3 font-semibold tracking-wider">TAILLE</p>
-      <div id="size-buttons" class="flex gap-3 flex-wrap"></div>
-    </div>
+```
+<div id="size-section" class="mb-10">
+  <p class="text-gray-400 text-sm mb-3 font-semibold tracking-wider">TAILLE</p>
+  <div id="size-buttons" class="flex gap-3 flex-wrap"></div>
+</div>
+```
+
   </div>
 </div>
 
@@ -199,7 +200,6 @@
     Ajouter au panier
   </button>
 </div>
-
 
   </div>
 
@@ -354,91 +354,93 @@
           <input id="phone" type="tel" placeholder="Téléphone *" class="mt-4 w-full bg-zinc-800 border border-white/20 rounded-2xl px-5 py-4 focus:outline-none focus:border-[#39ff14]">
         </div>
 
+```
+<!-- CHOIX MÉTHODE DE PAIEMENT -->
+<div>
+  <h3 class="font-semibold text-lg mb-4">Méthode de paiement</h3>
+  <div class="grid grid-cols-2 gap-3">
+    <button onclick="selectPayment('paypal')" id="tab-paypal"
+            class="py-4 rounded-2xl font-bold text-sm border-2 border-[#0070ba] bg-[#0070ba]/15 text-white flex items-center justify-center gap-2">
+      <i class="fa-brands fa-paypal text-xl"></i> PayPal
+    </button>
+    <button onclick="selectPayment('crypto')" id="tab-crypto"
+            class="py-4 rounded-2xl font-bold text-sm border-2 border-white/20 bg-transparent text-gray-400 flex items-center justify-center gap-2">
+      <i class="fa-solid fa-coins text-xl"></i> Crypto
+    </button>
+  </div>
+</div>
 
-    <!-- CHOIX MÉTHODE DE PAIEMENT -->
-    <div>
-      <h3 class="font-semibold text-lg mb-4">Méthode de paiement</h3>
-      <div class="grid grid-cols-2 gap-3">
-        <button onclick="selectPayment('paypal')" id="tab-paypal"
-                class="py-4 rounded-2xl font-bold text-sm border-2 border-[#0070ba] bg-[#0070ba]/15 text-white flex items-center justify-center gap-2">
-          <i class="fa-brands fa-paypal text-xl"></i> PayPal
-        </button>
-        <button onclick="selectPayment('crypto')" id="tab-crypto"
-                class="py-4 rounded-2xl font-bold text-sm border-2 border-white/20 bg-transparent text-gray-400 flex items-center justify-center gap-2">
-          <i class="fa-solid fa-coins text-xl"></i> Crypto
-        </button>
-      </div>
+<!-- BLOC PAYPAL -->
+<div id="block-paypal" class="bg-zinc-950 border border-white/10 rounded-3xl p-6">
+  <h3 class="font-semibold text-lg mb-4 flex items-center gap-2">
+    <i class="fa-brands fa-paypal text-[#0070ba] text-2xl"></i> Paiement via PayPal
+  </h3>
+  <div class="space-y-6">
+    <div class="bg-black/70 p-5 rounded-2xl text-sm space-y-3">
+      <p class="text-gray-300">Cliquez sur le bouton ci-dessous pour effectuer votre paiement PayPal :</p>
+      <a id="paypal-link" href="https://www.paypal.me/AntoniAgrume" target="_blank"
+         class="flex items-center justify-center gap-3 w-full py-4 rounded-2xl font-bold text-white text-lg"
+         style="background: linear-gradient(135deg, #003087 0%, #0070ba 50%, #00a0dc 100%);">
+        <i class="fa-brands fa-paypal text-2xl"></i>
+        Payer via PayPal
+      </a>
+      <p class="text-gray-500 text-xs text-center">paypal.me/AntoniAgrume</p>
     </div>
-
-    <!-- BLOC PAYPAL -->
-    <div id="block-paypal" class="bg-zinc-950 border border-white/10 rounded-3xl p-6">
-      <h3 class="font-semibold text-lg mb-4 flex items-center gap-2">
-        <i class="fa-brands fa-paypal text-[#0070ba] text-2xl"></i> Paiement via PayPal
-      </h3>
-      <div class="space-y-6">
-        <div class="bg-black/70 p-5 rounded-2xl text-sm space-y-3">
-          <p class="text-gray-300">Cliquez sur le bouton ci-dessous pour effectuer votre paiement PayPal :</p>
-          <a id="paypal-link" href="https://www.paypal.me/AntoniAgrume" target="_blank"
-             class="flex items-center justify-center gap-3 w-full py-4 rounded-2xl font-bold text-white text-lg"
-             style="background: linear-gradient(135deg, #003087 0%, #0070ba 50%, #00a0dc 100%);">
-            <i class="fa-brands fa-paypal text-2xl"></i>
-            Payer via PayPal
-          </a>
-          <p class="text-gray-500 text-xs text-center">paypal.me/AntoniAgrume</p>
-        </div>
-        <div class="flex items-start gap-3">
-          <input type="checkbox" id="confirmPaypal" class="mt-1 w-5 h-5 accent-[#39ff14]" onchange="updateValidateButton()">
-          <label for="confirmPaypal" class="text-sm leading-tight cursor-pointer">J'ai effectué le paiement PayPal du montant total indiqué.</label>
-        </div>
-      </div>
+    <div class="flex items-start gap-3">
+      <input type="checkbox" id="confirmPaypal" class="mt-1 w-5 h-5 accent-[#39ff14]" onchange="updateValidateButton()">
+      <label for="confirmPaypal" class="text-sm leading-tight cursor-pointer">J'ai effectué le paiement PayPal du montant total indiqué.</label>
     </div>
+  </div>
+</div>
 
-    <!-- BLOC CRYPTO -->
-    <div id="block-crypto" class="hidden bg-zinc-950 border border-white/10 rounded-3xl p-6">
-      <h3 class="font-semibold text-lg mb-4 flex items-center gap-2">
-        <i class="fa-solid fa-coins text-[#26a17b] text-2xl"></i> Paiement en USDT
-      </h3>
-      <div class="space-y-5">
-        <div class="bg-black/70 p-5 rounded-2xl text-sm space-y-4">
-          <!-- Réseau -->
-          <div class="flex items-center gap-3 bg-[#26a17b]/10 border border-[#26a17b]/40 rounded-2xl px-4 py-3">
-            <i class="fa-solid fa-network-wired text-[#26a17b] text-lg"></i>
-            <div>
-              <p class="text-[#26a17b] font-bold text-sm">Réseau : Ethereum (ERC-20)</p>
-              <p class="text-gray-400 text-xs mt-0.5">Envoyez uniquement du USDT sur le réseau Ethereum</p>
-            </div>
-          </div>
-          <!-- Adresse -->
-          <div>
-            <p class="text-gray-400 text-xs mb-2 font-semibold tracking-wider">ADRESSE USDT (ERC-20)</p>
-            <div class="bg-zinc-900 border border-white/10 rounded-2xl px-4 py-3 flex items-center gap-3">
-              <p class="text-white text-xs font-mono flex-1 break-all">0xE29d1a397a1d3fA82855304c938fBe6170b45d76</p>
-              <button onclick="copyAddress()" class="flex-shrink-0 text-[#39ff14] text-lg" title="Copier">
-                <i class="fa-solid fa-copy"></i>
-              </button>
-            </div>
-            <p id="copy-confirm" class="hidden text-[#39ff14] text-xs text-center mt-2">✅ Adresse copiée !</p>
-          </div>
-          <!-- Avertissement -->
-          <div class="flex items-start gap-3 bg-yellow-500/10 border border-yellow-500/30 rounded-2xl px-4 py-3">
-            <i class="fa-solid fa-triangle-exclamation text-yellow-400 mt-0.5"></i>
-            <p class="text-yellow-300 text-xs leading-relaxed">Envoyez uniquement des <strong>USDT sur le réseau Ethereum</strong>. Tout envoi sur un autre réseau sera perdu.</p>
-          </div>
-          <!-- Hash transaction -->
-          <div>
-            <p class="text-gray-400 text-xs mb-2 font-semibold tracking-wider">HASH DE TRANSACTION *</p>
-            <input id="txHash" type="text" placeholder="0x... (hash de votre transaction)" 
-                   class="w-full bg-zinc-900 border border-white/20 rounded-2xl px-4 py-3 text-white text-sm font-mono focus:outline-none focus:border-[#39ff14]"
-                   oninput="updateValidateButton()">
-            <p class="text-gray-500 text-xs mt-2">Collez ici le hash de transaction après avoir effectué votre paiement.</p>
-          </div>
-        </div>
-        <div class="flex items-start gap-3">
-          <input type="checkbox" id="confirmCrypto" class="mt-1 w-5 h-5 accent-[#39ff14]" onchange="updateValidateButton()">
-          <label for="confirmCrypto" class="text-sm leading-tight cursor-pointer">J'ai effectué le paiement en USDT (ERC-20) et je fournis mon hash de transaction.</label>
+<!-- BLOC CRYPTO -->
+<div id="block-crypto" class="hidden bg-zinc-950 border border-white/10 rounded-3xl p-6">
+  <h3 class="font-semibold text-lg mb-4 flex items-center gap-2">
+    <i class="fa-solid fa-coins text-[#26a17b] text-2xl"></i> Paiement en USDT
+  </h3>
+  <div class="space-y-5">
+    <div class="bg-black/70 p-5 rounded-2xl text-sm space-y-4">
+      <!-- Réseau -->
+      <div class="flex items-center gap-3 bg-[#26a17b]/10 border border-[#26a17b]/40 rounded-2xl px-4 py-3">
+        <i class="fa-solid fa-network-wired text-[#26a17b] text-lg"></i>
+        <div>
+          <p class="text-[#26a17b] font-bold text-sm">Réseau : Ethereum (ERC-20)</p>
+          <p class="text-gray-400 text-xs mt-0.5">Envoyez uniquement du USDT sur le réseau Ethereum</p>
         </div>
       </div>
+      <!-- Adresse -->
+      <div>
+        <p class="text-gray-400 text-xs mb-2 font-semibold tracking-wider">ADRESSE USDT (ERC-20)</p>
+        <div class="bg-zinc-900 border border-white/10 rounded-2xl px-4 py-3 flex items-center gap-3">
+          <p class="text-white text-xs font-mono flex-1 break-all">0xE29d1a397a1d3fA82855304c938fBe6170b45d76</p>
+          <button onclick="copyAddress()" class="flex-shrink-0 text-[#39ff14] text-lg" title="Copier">
+            <i class="fa-solid fa-copy"></i>
+          </button>
+        </div>
+        <p id="copy-confirm" class="hidden text-[#39ff14] text-xs text-center mt-2">✅ Adresse copiée !</p>
+      </div>
+      <!-- Avertissement -->
+      <div class="flex items-start gap-3 bg-yellow-500/10 border border-yellow-500/30 rounded-2xl px-4 py-3">
+        <i class="fa-solid fa-triangle-exclamation text-yellow-400 mt-0.5"></i>
+        <p class="text-yellow-300 text-xs leading-relaxed">Envoyez uniquement des <strong>USDT sur le réseau Ethereum</strong>. Tout envoi sur un autre réseau sera perdu.</p>
+      </div>
+      <!-- Hash transaction -->
+      <div>
+        <p class="text-gray-400 text-xs mb-2 font-semibold tracking-wider">HASH DE TRANSACTION *</p>
+        <input id="txHash" type="text" placeholder="0x... (hash de votre transaction)" 
+               class="w-full bg-zinc-900 border border-white/20 rounded-2xl px-4 py-3 text-white text-sm font-mono focus:outline-none focus:border-[#39ff14]"
+               oninput="updateValidateButton()">
+        <p class="text-gray-500 text-xs mt-2">Collez ici le hash de transaction après avoir effectué votre paiement.</p>
+      </div>
     </div>
+    <div class="flex items-start gap-3">
+      <input type="checkbox" id="confirmCrypto" class="mt-1 w-5 h-5 accent-[#39ff14]" onchange="updateValidateButton()">
+      <label for="confirmCrypto" class="text-sm leading-tight cursor-pointer">J'ai effectué le paiement en USDT (ERC-20) et je fournis mon hash de transaction.</label>
+    </div>
+  </div>
+</div>
+```
+
   </div>
   <div class="p-5 border-t border-white/10 flex-shrink-0">
     <button id="validate-btn" onclick="sendOrderToWhatsApp()" 
@@ -448,7 +450,6 @@
     <button onclick="closeCheckout()" class="w-full py-5 mt-3 text-gray-400">Annuler</button>
   </div>
 </div>
-
 
   </div>
 
@@ -507,7 +508,24 @@
       { id:9, name:"Sacoche Dior", price:200, hasSizes:false, description:PRODUCT_DESC,
         images:["dior_sacoche1_front.JPG","dior_sacoche1_back.JPG","dior_sacoche1_inside.JPG","dior_sacoche1_detail.JPG"] },
       { id:10, name:"Sacoche Dior", price:200, hasSizes:false, description:PRODUCT_DESC,
-        images:["dior_sacoche2_front.JPG","dior_sacoche2_back.JPG","dior_sacoche2_inside.JPG","dior_sacoche2_logo.JPG","dior_sacoche2_worn.JPG","dior_sacoche2_packshot.JPG"] }
+        images:["dior_sacoche2_front.JPG","dior_sacoche2_back.JPG","dior_sacoche2_inside.JPG","dior_sacoche2_logo.JPG","dior_sacoche2_worn.JPG","dior_sacoche2_packshot.JPG"] },
+      { id:11, name:"Sacoche Louis Vuitton", price:180, hasSizes:false, description:PRODUCT_DESC,
+        images:["lv_sacoche1_front.JPG","lv_sacoche1_back.JPG","lv_sacoche1_inside.JPG","lv_sacoche1_detail.JPG","lv_sacoche1_logo.JPG","lv_sacoche1_worn.JPG","lv_sacoche1_packshot.JPG"] },
+      { id:12, name:"Sacoche Dior", price:180, hasSizes:false, description:PRODUCT_DESC,
+        images:["dior_sacoche3_front.JPG","dior_sacoche3_back.JPG","dior_sacoche3_inside.JPG","dior_sacoche3_detail.JPG","dior_sacoche3_logo.JPG","dior_sacoche3_worn.JPG","dior_sacoche3_packshot.JPG"] },
+      { id:13, name:"Sacoche Louis Vuitton", price:220, hasSizes:false, description:PRODUCT_DESC,
+        images:["lv_sacoche2_front.JPG","lv_sacoche2_back.JPG","lv_sacoche2_inside.JPG","lv_sacoche2_detail.JPG","lv_sacoche2_logo.JPG","lv_sacoche2_worn.JPG","lv_sacoche2_packshot.JPG"] },
+      { id:14, name:"Casquette Fendi", price:80, hasSizes:false, description:PRODUCT_DESC,
+        images:["fendi_casquette1_front.JPG","fendi_casquette1_back.JPG","fendi_casquette1_side.JPG","fendi_casquette1_logo.JPG","fendi_casquette1_worn.JPG"] },
+      { id:15, name:"Casquette Fendi", price:80, hasSizes:false, description:PRODUCT_DESC,
+        images:["fendi_casquette2_front.JPG","fendi_casquette2_back.JPG","fendi_casquette2_side.JPG","fendi_casquette2_logo.JPG","fendi_casquette2_worn.JPG","fendi_casquette2_detail.JPG","fendi_casquette2_packshot.JPG"] },
+      { id:16, name:"Montre Patek Philippe Aquanaut", price:550, hasSizes:false,
+        description:"Animée par un mouvement à quartz suisse authentique, cette montre se compose de 100 pièces distinctes. Le design de son cadran est véritablement unique, arborant un motif gaufré distinctif ainsi que de superbes index tridimensionnels. Son verre est taillé dans un saphir d'une extrême dureté, offrant une résistance exceptionnelle tant aux reflets qu'aux rayures. La montre intègre par ailleurs des matériaux composites tropicaux importés.",
+        images:["patek_aquanaut_front.JPG","patek_aquanaut_side.JPG","patek_aquanaut_back.JPG","patek_aquanaut_detail.JPG","patek_aquanaut_worn.JPG","patek_aquanaut_packshot.JPG"] },
+      { id:17, name:"Montre Patek Philippe", price:510, hasSizes:false, description:PRODUCT_DESC,
+        images:["patek_montre_front.JPG","patek_montre_side.JPG","patek_montre_back.JPG","patek_montre_detail.JPG","patek_montre_worn.JPG","patek_montre_packshot.JPG"] },
+      { id:18, name:"Veste Dior", price:150, hasSizes:true, description:PRODUCT_DESC,
+        images:["dior_veste2_front.JPG","dior_veste2_back.JPG","dior_veste2_detail.JPG","dior_veste2_logo.JPG","dior_veste2_worn.JPG","dior_veste2_side.JPG","dior_veste2_close.JPG","dior_veste2_packshot.JPG"] }
     ];
 
     // ─── Helper : show/hide the filters bar ───────────────────────────────────
@@ -525,6 +543,8 @@
       if (name.includes("baskets")) return "Chaussures de luxe";
       if (name.includes("t-shirt") && !name.includes("short")) return "T-shirts";
       if (name.includes("veste")) return "Vestes";
+      if (name.includes("casquette")) return "Casquettes";
+      if (name.includes("montre")) return "Montres";
       return "Autre";
     }
 
@@ -534,6 +554,7 @@
       if (name.includes("Fendi")) return "Fendi";
       if (name.includes("Dior")) return "Dior";
       if (name.includes("Louis Vuitton") || name.includes("LV")) return "Louis Vuitton";
+      if (name.includes("Patek")) return "Patek Philippe";
       return "Autre";
     }
 
@@ -902,7 +923,7 @@
       document.getElementById('reviews-page').classList.add('hidden');
       document.getElementById('info-page').classList.add('hidden');
       document.getElementById('main-products').classList.remove('hidden');
-      showFilters(); // ← show filters on home
+      showFilters();
       renderProducts();
     }
 
@@ -912,7 +933,7 @@
       document.getElementById('main-products').classList.add('hidden');
       document.getElementById('info-page').classList.add('hidden');
       document.getElementById('reviews-page').classList.remove('hidden');
-      hideFilters(); // ← hide filters on reviews
+      hideFilters();
       renderReviews();
     }
 
@@ -922,7 +943,7 @@
       document.getElementById('main-products').classList.add('hidden');
       document.getElementById('reviews-page').classList.add('hidden');
       document.getElementById('info-page').classList.remove('hidden');
-      hideFilters(); // ← hide filters on info
+      hideFilters();
     }
 
     function showContactModal() { 
@@ -943,7 +964,7 @@
       populateFilters();
       renderProducts();
       updateCartCount();
-      showFilters(); // show filters on initial home load
+      showFilters();
 
       ['firstName','lastName','address','postalCode','city','phone'].forEach(id => {
         const el = document.getElementById(id);
