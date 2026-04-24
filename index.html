@@ -107,6 +107,30 @@
     #filters-bar.visible {
       display: block;
     }
+
+    /* Marquee */
+    .marquee-wrapper {
+      overflow: hidden;
+      background: rgba(57,255,20,0.07);
+      border-bottom: 1px solid rgba(57,255,20,0.2);
+      padding: 8px 0;
+      white-space: nowrap;
+    }
+    .marquee-track {
+      display: inline-block;
+      animation: marquee-scroll 18s linear infinite;
+    }
+    .marquee-track span {
+      font-size: 13px;
+      font-weight: 600;
+      color: #39ff14;
+      letter-spacing: 0.04em;
+      padding: 0 48px;
+    }
+    @keyframes marquee-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
   </style>
 
 </head>
@@ -145,7 +169,16 @@ class="w-10 h-10 bg-zinc-900 hover:bg-zinc-800 border border-white/20 rounded-2x
 
   </div>
 
-  <!-- MAIN PRODUCTS -->
+  <!-- MARQUEE -->
+
+  <div id="marquee-bar" class="marquee-wrapper hidden">
+    <div class="marquee-track">
+      <span>Les prix sont à la hauteur de la qualité ⭐️</span>
+      <span>Les prix sont à la hauteur de la qualité ⭐️</span>
+      <span>Les prix sont à la hauteur de la qualité ⭐️</span>
+      <span>Les prix sont à la hauteur de la qualité ⭐️</span>
+    </div>
+  </div>
 
   <main id="main-products" class="flex-1 overflow-auto pb-20">
     <div class="px-4 pt-4 max-w-2xl mx-auto">
@@ -184,12 +217,12 @@ class="w-10 h-10 bg-zinc-900 hover:bg-zinc-800 border border-white/20 rounded-2x
     <p id="detail-price" class="text-[#39ff14] text-3xl font-black mt-3 mb-4"></p>
     <p id="detail-description" class="text-gray-300 text-sm leading-relaxed mb-8 bg-zinc-900 rounded-2xl px-4 py-3 border border-white/10"></p>
 
-
+```
 <div id="size-section" class="mb-10">
   <p class="text-gray-400 text-sm mb-3 font-semibold tracking-wider">TAILLE</p>
   <div id="size-buttons" class="flex gap-3 flex-wrap"></div>
 </div>
-
+```
 
   </div>
 </div>
@@ -515,9 +548,9 @@ class="w-10 h-10 bg-zinc-900 hover:bg-zinc-800 border border-white/20 rounded-2x
         images:["dior_sacoche3_front.JPG","dior_sacoche3_back.JPG","dior_sacoche3_inside.JPG","dior_sacoche3_detail.JPG","dior_sacoche3_logo.JPG","dior_sacoche3_worn.JPG","dior_sacoche3_packshot.JPG"] },
       { id:13, name:"Sacoche Louis Vuitton", price:220, hasSizes:false, description:PRODUCT_DESC,
         images:["lv_sacoche2_front.JPG","lv_sacoche2_back.JPG","lv_sacoche2_inside.JPG","lv_sacoche2_detail.JPG","lv_sacoche2_logo.JPG","lv_sacoche2_worn.JPG","lv_sacoche2_packshot.JPG"] },
-      { id:14, name:"Casquette Fendi", price:70, hasSizes:false, description:PRODUCT_DESC,
+      { id:14, name:"Casquette Fendi", price:80, hasSizes:false, description:PRODUCT_DESC,
         images:["fendi_casquette1_front.JPG","fendi_casquette1_back.JPG","fendi_casquette1_side.JPG","fendi_casquette1_logo.JPG","fendi_casquette1_worn.JPG"] },
-      { id:15, name:"Casquette Fendi", price:70, hasSizes:false, description:PRODUCT_DESC,
+      { id:15, name:"Casquette Fendi", price:80, hasSizes:false, description:PRODUCT_DESC,
         images:["fendi_casquette2_front.JPG","fendi_casquette2_back.JPG","fendi_casquette2_side.JPG","fendi_casquette2_logo.JPG","fendi_casquette2_worn.JPG","fendi_casquette2_detail.JPG","fendi_casquette2_packshot.JPG"] },
       { id:16, name:"Montre Patek Philippe Aquanaut", price:550, hasSizes:false,
         description:"Animée par un mouvement à quartz suisse authentique, cette montre se compose de 100 pièces distinctes. Le design de son cadran est véritablement unique, arborant un motif gaufré distinctif ainsi que de superbes index tridimensionnels. Son verre est taillé dans un saphir d'une extrême dureté, offrant une résistance exceptionnelle tant aux reflets qu'aux rayures. La montre intègre par ailleurs des matériaux composites tropicaux importés.",
@@ -531,9 +564,11 @@ class="w-10 h-10 bg-zinc-900 hover:bg-zinc-800 border border-white/20 rounded-2x
     // ─── Helper : show/hide the filters bar ───────────────────────────────────
     function showFilters() {
       document.getElementById('filters-bar').classList.add('visible');
+      document.getElementById('marquee-bar').classList.remove('hidden');
     }
     function hideFilters() {
       document.getElementById('filters-bar').classList.remove('visible');
+      document.getElementById('marquee-bar').classList.add('hidden');
     }
 
     function getCategory(product) {
